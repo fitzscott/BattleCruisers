@@ -117,12 +117,14 @@ class PlayerBoard:
         """ Discarding may be done from either the hand or the
         recovery zone.
         """
-        if (piledescr == "hand"):
+        if ("hand" in piledescr) and (card in self.hand):
             self.hand.remove(card)
-        elif (piledescr == "inplay"):
+        elif ("inplay" in piledescr) and (card in self.inplay):
             self.inplay.remove(card)
-        else:
+        elif (card in self.recoveryzone):
             self.recoveryzone.remove(card)
+        else:
+            print("Throw an exception here")    # to do
         self.discards.append(card)
 
     def addtohand(self, card):
@@ -219,7 +221,7 @@ if __name__ == '__main__':
     if pb.checkrecoveryforsymbol("People"):
         print("Recovery zone has symbol People (NOT expected)")
     print("++++++++++++  Discarding from recovery zone")
-    pb.discard(c1, "recovery")
+    pb.discard(c1, ["recovery"])
     print(pb)
     print("++++++++++++  Playing Shields")
     pb.readytoplay(c2)

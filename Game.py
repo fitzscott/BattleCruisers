@@ -45,6 +45,14 @@ class Game:
             for cardidx in range(len(self._cardlist)):
                 self.playerboards[pbidx].addtohand(self.cardlist[cardidx])
 
+    def getcardstoplay(self):
+        cardstoplay = []
+        for pbidx in range(self._numplayers):
+            cardstoplay.append((self.playerboards[pbidx].inplay[0].rank,
+                                pbidx))
+        cardstoplay.sort()
+        return(cardstoplay)
+
     def playallcards(self):
         """
         Create a tuple for each playerboard's card in play,
@@ -52,11 +60,8 @@ class Game:
         Then determine whether there are duplicates & evaluate
         each card.
         """
-        cardstoplay = []
-        for pbidx in range(self._numplayers):
-            cardstoplay.append((self.playerboards[pbidx].inplay[0].rank,
-                                pbidx))
-        cardstoplay.sort()
+
+        cardstoplay = self.getcardstoplay()
         # print(cardstoplay)
         # Determine duplicates, if any, in chosen cards
         carddupes = {}
@@ -77,7 +82,11 @@ class Game:
                                                                     pbidx)
 
     def endturn(self):
-        pass
+        cardstoplay = self.getcardstoplay()
+        for (cardrank, pbidx) in cardstoplay:
+            if self.playerboards[pbidx].disabled == 0:
+                self.playerboards[pbidx].inplay[0].end_of_turn_effect(self,
+                                                                      pbidx)
 
 if __name__ == '__main__':
     c1 = Card.Card("Not a Card", 1)
@@ -96,3 +105,4 @@ if __name__ == '__main__':
     g.playerboards[2].readytoplay(c2)
     g.playerboards[3].readytoplay(c3)
     g.playallcards()
+    g.endturn()
