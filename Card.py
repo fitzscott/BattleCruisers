@@ -6,7 +6,7 @@ Created on Sun Jan 22 20:40:22 2017
 """
 
 
-class Card:
+class Card(object):
     """
     Card - base class.  A player playing a card causes interaction
     with one or more other players.  There are two conditions:
@@ -15,11 +15,15 @@ class Card:
     The first condition is called "Main" and the second "Clash".
     """
 
-    # Colors for symbols on cards.  Names are mostly guesses.
-    #           blue/red,   blue/red,    black/yellow, yellow/green
-    #        yellow/red, white/purple
-    Symbols = ["Negation", "Anti-negation", "People", "Equipment",
-               "Attack", "Maneuver"]
+    # Names for symbols on cards, mostly guesses.  Color & description.
+    Symbols = [
+               "Negation",        # blue/red circle
+               "Anti-negation",   # blue/red circle w/ strikethrough
+               "People",          # black/yellow - looks like people
+               "Equipment",       # yellow/green - looks like circuit
+               "Attack",          # yellow/red - looks like bullets
+               "Maneuver"         # white/purple - looks like ring planet
+              ]
 
     def __init__(self, title, rank):
         self._title = title

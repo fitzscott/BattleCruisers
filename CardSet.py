@@ -8,7 +8,7 @@ Created on Tue Mar  7 22:08:56 2017
 # import all the types of cards here
 
 
-class CardSet:
+class CardSet(object):
     """
     CardSet - take a list of ranks and create a set (dictionary) of
     Card classes for instantiation.

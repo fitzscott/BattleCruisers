@@ -9,7 +9,7 @@ Created on Mon Mar  6 21:11:07 2017
 # import Game
 
 
-class Player:
+class Player(object):
     """Player - do all the decision-making that a player would do,
     e.g. pick a card to play, pick a card to discard, pick a
     player to take victory points from, etc.

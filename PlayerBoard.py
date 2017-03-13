@@ -8,7 +8,7 @@ Created on Sun Jan 22 21:48:40 2017
 # import Player
 
 
-class PlayerBoard:
+class PlayerBoard(object):
     """
     PlayerBoard - where a player's "in play", "recovery zone", and
     discarded cards are kept, along with the player's victory points
@@ -71,6 +71,8 @@ class PlayerBoard:
 
     @victorypoints.setter
     def victorypoints(self, val):
+        if val < 0:
+            val = 0
         self._victorypoints = val
 
     @property
@@ -117,15 +119,16 @@ class PlayerBoard:
         """ Discarding may be done from either the hand or the
         recovery zone.
         """
-        if ("hand" in piledescr) and (card in self.hand):
-            self.hand.remove(card)
-        elif ("inplay" in piledescr) and (card in self.inplay):
-            self.inplay.remove(card)
-        elif (card in self.recoveryzone):
-            self.recoveryzone.remove(card)
-        else:
-            print("Throw an exception here")    # to do
-        self.discards.append(card)
+        if card is not None:
+            if ("hand" in piledescr) and (card in self.hand):
+                self.hand.remove(card)
+            elif ("inplay" in piledescr) and (card in self.inplay):
+                self.inplay.remove(card)
+            elif (card in self.recoveryzone):
+                self.recoveryzone.remove(card)
+            else:
+                print("Throw an exception here")    # to do
+            self.discards.append(card)
 
     def addtohand(self, card):
         self.hand.append(card)
@@ -240,3 +243,7 @@ if __name__ == '__main__':
         print(pb)
     except Exception:
         print("Caught exception as expected")
+    pb.victorypoints = 5
+    print("VP: " + str(pb.victorypoints))
+    pb.victorypoints = -1
+    print("VP: " + str(pb.victorypoints) + " (should be 0)")

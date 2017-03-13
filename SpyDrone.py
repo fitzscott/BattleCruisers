@@ -34,7 +34,7 @@ class SpyDrone(Card.Card):
         myboard = game.playerboards[pbidx]
         if myboard.checkredalert():
             myboard.discard(self, ["inplay"])
-            print("Last card! Red alert!")
+            # print("Last card! Red alert!")
 
 if __name__ == '__main__':
     import Game

@@ -9,7 +9,7 @@ import Card
 import PlayerBoard
 
 
-class Game:
+class Game(object):
     """
     Game class:
     1)  Set up the player boards and allocate sets of cards
@@ -25,6 +25,7 @@ class Game:
         self._numplayers = numplayers
         self._cardlist = []
         self._playerboards = []
+        self._numclashes = 0
         for pbidx in range(numplayers):
             pb = PlayerBoard.PlayerBoard("Player " + str(pbidx + 1))
             self._playerboards.append(pb)
@@ -37,6 +38,14 @@ class Game:
     def cardlist(self):
         return(self._cardlist)
 
+    @property
+    def numclashes(self):
+        return(self._numclashes)
+
+    @numclashes.setter
+    def numclashes(self, val):
+        self._numclashes = val
+
     def addtocardlist(self, card):
         self._cardlist.append(card)
 
@@ -48,8 +57,9 @@ class Game:
     def getcardstoplay(self):
         cardstoplay = []
         for pbidx in range(self._numplayers):
-            cardstoplay.append((self.playerboards[pbidx].inplay[0].rank,
-                                pbidx))
+            if len(self.playerboards[pbidx].inplay) > 0:
+                cardstoplay.append((self.playerboards[pbidx].inplay[0].rank,
+                                    pbidx))
         cardstoplay.sort()
         return(cardstoplay)
 
@@ -65,10 +75,15 @@ class Game:
         # print(cardstoplay)
         # Determine duplicates, if any, in chosen cards
         carddupes = {}
+        self.numclashes = 0
         for (cardrank, pbidx) in cardstoplay:
-            # print("Card rank: " + str(cardrank) + " for player " +
-            #      str(pbidx))
+            print("Card rank: " + str(cardrank) + " for player " +
+                  str(pbidx))
             if cardrank in carddupes:
+                if carddupes[cardrank] != "dupe":
+                    self.numclashes = 2
+                else:
+                    self.numclashes += 1
                 carddupes[cardrank] = "dupe"
             else:
                 carddupes[cardrank] = "single"
