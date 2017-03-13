@@ -19,10 +19,10 @@ class Card(object):
     Symbols = [
                "Negation",        # blue/red circle
                "Anti-negation",   # blue/red circle w/ strikethrough
-               "People",          # black/yellow - looks like people
-               "Equipment",       # yellow/green - looks like circuit
-               "Attack",          # yellow/red - looks like bullets
-               "Maneuver"         # white/purple - looks like ring planet
+               "People",          # black/yellow - people
+               "Technology",      # yellow/green - circuit (was Equipment)
+               "Weapons",         # yellow/red - bullets (was Attack)
+               "Space"            # white/purple - ring planet (was Maneuver)
               ]
 
     def __init__(self, title, rank):
@@ -64,6 +64,6 @@ class Card(object):
 
 if __name__ == '__main__':
     c = Card("Spy Drone", 1)
-    c.add_symbol("Equipment")
+    c.add_symbol("Technology")
     print("The " + c.title + "'s rank is " + str(c.rank))
     print(c.title + " has symbol " + c.symbols[0])

@@ -16,14 +16,14 @@ class CombatTactics(Card.Card):
     def __init__(self):
         Card.Card.__init__(self, "Combat Tactics", 19)
         # super().__init__("Combat Tactics", 19)
-        self.add_symbol(Card.Card.Symbols[4])    # Attack / Combat
-        self.add_symbol(Card.Card.Symbols[5])    # Maneuver
+        self.add_symbol(Card.Card.Symbols[4])    # Weapons / Combat
+        self.add_symbol(Card.Card.Symbols[5])    # Space / Maneuver
 
     def main_effect(self, game, pbidx):
         """
         main_effect -
         1) Check victory points:  If < 5, gain 5.
-        2) If Attack symbol in recovery, get card back from discard pile.
+        2) If Weapons symbol in recovery, get card back from discard pile.
         """
         # import PlayerBoard
 
@@ -31,7 +31,7 @@ class CombatTactics(Card.Card):
         if myboard.victorypoints < 5:
             myboard.victorypoints += 5
 
-        if myboard.checkrecoveryforsymbol("Attack"):
+        if myboard.checkrecoveryforsymbol("Weapons"):
             myboard.returndiscardtohand(game, pbidx)
 
 if __name__ == '__main__':

@@ -201,7 +201,7 @@ if __name__ == '__main__':
     import Card
 
     c1 = Card.Card("Precision Strike", 34)
-    c1.add_symbol("Attack")
+    c1.add_symbol("Weapons")
     c2 = Card.Card("Shields", 3)
     c3 = Card.Card("Cloaking Device", 4)
     pb = PlayerBoard("Player 1")
@@ -219,8 +219,8 @@ if __name__ == '__main__':
     print("++++++++++++  Ending play / recovering")
     pb.endplay()    # get it in the recovery area
     print(pb)
-    if pb.checkrecoveryforsymbol("Attack"):
-        print("Recovery zone has symbol Attack (expected)")
+    if pb.checkrecoveryforsymbol("Weapons"):
+        print("Recovery zone has symbol Weapons (expected)")
     if pb.checkrecoveryforsymbol("People"):
         print("Recovery zone has symbol People (NOT expected)")
     print("++++++++++++  Discarding from recovery zone")

@@ -13,7 +13,7 @@ class Ambassador(Card.Card):
     Ambassador:
     Gain 1 VP
     Opponents clashed:  Gain 2 VP
-    Maneuver symbol in RZ:  Gain 1 VP
+    Space symbol in RZ:  Gain 1 VP
     """
 
     def __init__(self):
@@ -30,7 +30,7 @@ class Ambassador(Card.Card):
         if game.numclashes >= 2:
             myboard.victorypoints += 2
         # check for maneuver symbol in recovery
-        if myboard.checkrecoveryforsymbol("Maneuver"):
+        if myboard.checkrecoveryforsymbol("Space"):
             myboard.victorypoints += 1
 
     def clash_effect(self, game, pbidx):
@@ -56,14 +56,14 @@ if __name__ == '__main__':
 
     g.addtocardlist(a)
     c = Card.Card("Test", 50)
-    # add Maneuver symbol = 1 VP if in recovery
+    # add Space symbol = 1 VP if in recovery
     c.add_symbol(Card.Card.Symbols[5])
     g.addtocardlist(c)
     g.sendcardlisttoboards()
     # induce clash = 2 VP
     g.playerboards[1].readytoplay(c)
     g.playerboards[2].readytoplay(c)
-    # put Maneuver card in RZ for test board
+    # put Space card in RZ for test board
     pb.recoveryzone.append(c)
     pb.victorypoints = 0
     g.playallcards()
