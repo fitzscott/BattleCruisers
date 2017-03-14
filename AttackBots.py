@@ -25,8 +25,11 @@ class AttackBots(Card.Card):
                                                                   "recovery")
         targetpb = game.playerboards[pl]
         card = targetpb.recoveryzone[cardidx]
-        myboard.hand.append(card)
-        targetpb.recoveryzone.remove(card)
+        # player chooser should not choose a protected opponent,
+        # but if it does, disallow the effect.
+        if targetpb.protected == 0:
+            myboard.hand.append(card)
+            targetpb.recoveryzone.remove(card)
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
@@ -45,6 +48,8 @@ if __name__ == '__main__':
         """
         ZeroPlayer - just return zero
         """
+        # This definition will not work in the general case - 
+        # need to return which deck it's being discarded from.
         def choosecardtodiscard(self, game, myphbidx, deck="hand"):
             return(0)
 

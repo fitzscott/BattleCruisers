@@ -124,7 +124,7 @@ class PlayerBoard(object):
                 self.hand.remove(card)
             elif ("inplay" in piledescr) and (card in self.inplay):
                 self.inplay.remove(card)
-            elif (card in self.recoveryzone):
+            elif ("recovery" in piledescr) and (card in self.recoveryzone):
                 self.recoveryzone.remove(card)
             else:
                 print("Throw an exception here")    # to do
@@ -168,6 +168,15 @@ class PlayerBoard(object):
         card = self.player.choosecardtoretrievefromdiscard(game, pbidx)
         self.hand.append(card)
         self.discards.remove(card)
+
+    def cardbyindex(self, cardidx, deck="hand"):
+        card = None
+        if cardidx >= 0:
+            if deck == "hand":
+                card = self.hand[cardidx]
+            elif deck == "recovery":
+                card = self.recoveryzone[cardidx]
+        return(card)
 
     def printinplay(self):
         retstr = "----  In play:\n"

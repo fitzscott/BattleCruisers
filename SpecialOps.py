@@ -33,7 +33,8 @@ class SpecialOps(Card.Card):
             for pbidxothers in range(len(game.playerboards)):
                 if pbidxothers != pbidx:
                     pbother = game.playerboards[pbidxothers]
-                    if pbother.victorypoints > 0:
+                    # make sure other board is not protected
+                    if pbother.protected == 0 and pbother.victorypoints > 0:
                         pbother.victorypoints -= 1
                         myboard.victorypoints += 1
 

@@ -21,10 +21,13 @@ class RecklessPilot(Card.Card):
         """
         Discard 1 card + get 4 VP
         """
+        myboard = game.playerboards[pbidx]
+        card = myboard.player.choosecardtodiscard(["hand", "recovery"])
+        myboard.discard(card, ["hand", "recovery"])
+        myboard.victorypoints += 4
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
-        # This is going to be a different style discard.
         card = myboard.player.choosecardtodiscard(["hand", "inplay"])
         myboard.discard(card, ["hand", "inplay"])
 
