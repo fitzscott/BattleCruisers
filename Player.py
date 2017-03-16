@@ -18,13 +18,20 @@ class Player(object):
     def __init__(self, name):
         self._name = name
 
+    @property
+    def name(self):
+        return(self._name)
+
     def getmyboard(self, game, myphbidx):
         return game.playerboards[myphbidx]
 
     def choosecardtoplay(self, game, myphbidx):
+        """
+        Pick a card from your hand to play
+        """
         pass
 
-    def choosecardtodiscard(self, game, myphbidx, deck="hand"):
+    def choosecardtodiscard(self, game, myphbidx, deck):
         pass
 
     def choosecardtoretrievefromdiscard(self, game, myphbidx):
@@ -33,7 +40,10 @@ class Player(object):
     def choosecardtoremovefromdiscard(self, game, myphbidx):
         pass
 
-    def choosecardtoswap(self, game, myphbidx, deck="hand"):
+    def choosecardtosendtorecovery(self, game, myphbidx):
+        pass
+
+    def choosecardtoswap(self, game, myphbidx, deck):
         pass
 
     def choosecardtotake(self, game, myphbidx):
@@ -45,7 +55,10 @@ class Player(object):
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
         pass
 
-    def chooseplayertotakecardfrom(self, game, myphbidx, deck="hand"):
+    def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+        pass
+
+    def chooseplayertotakecardfrom(self, game, myphbidx, deck):
         pass
 
     def chooseeffecttoignore(self, game, myphbidx):

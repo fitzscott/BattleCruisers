@@ -38,6 +38,10 @@ class Game(object):
     def cardlist(self):
         return(self._cardlist)
 
+    @cardlist.setter
+    def cardlist(self, val):
+        self._cardlist = val
+
     @property
     def numclashes(self):
         return(self._numclashes)
@@ -77,8 +81,8 @@ class Game(object):
         carddupes = {}
         self.numclashes = 0
         for (cardrank, pbidx) in cardstoplay:
-            print("Card rank: " + str(cardrank) + " for player " +
-                  str(pbidx))
+            # print("Card rank: " + str(cardrank) + " for player " +
+            #      str(pbidx))
             if cardrank in carddupes:
                 if carddupes[cardrank] != "dupe":
                     self.numclashes = 2
@@ -102,6 +106,12 @@ class Game(object):
             if self.playerboards[pbidx].disabled == 0:
                 self.playerboards[pbidx].inplay[0].end_of_turn_effect(self,
                                                                       pbidx)
+        for pb in self.playerboards:
+            pb.endplay()
+            pb.checkredalert()
+            if pb.checklost():
+                # Need something more here
+                print(pb.player.name + " has lost.")
 
 if __name__ == '__main__':
     c1 = Card.Card("Not a Card", 1)

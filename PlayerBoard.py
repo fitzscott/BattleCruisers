@@ -26,7 +26,7 @@ class PlayerBoard(object):
         self._redalert = False
         self._disabled = 0
         self._protected = 0
-        self._victorypoints = 0
+        self._victorypoints = 1    # everyone starts with 1
         self._player = None
 
     @property
@@ -90,8 +90,9 @@ class PlayerBoard(object):
         have placed their chosen card in their respective "in play"
         areas.
         """
-        self.hand.remove(card)
-        self.inplay.append(card)
+        if not self.checklost() and card is not None:
+            self.hand.remove(card)
+            self.inplay.append(card)
 
     def endplay(self):
         """ The card in the "in play" area has been played,
@@ -99,6 +100,9 @@ class PlayerBoard(object):
         done after the recover step, as we don't want the card
         going directly to the player's hand.
         """
+        for card in self.recoveryzone:
+            self.hand.append(card)
+            self.recoveryzone.remove(card)
         for card in self.inplay:
             self.recoveryzone.append(card)
             self.inplay.remove(card)
@@ -115,6 +119,11 @@ class PlayerBoard(object):
             self.hand.append(card)
             self.recoveryzone.remove(card)
 
+    def sendtorecovery(self, card):
+        if card is not None:
+            self.recoveryzone.append(card)
+            self.hand.remove(card)
+
     def discard(self, card, piledescr):
         """ Discarding may be done from either the hand or the
         recovery zone.
@@ -127,7 +136,8 @@ class PlayerBoard(object):
             elif ("recovery" in piledescr) and (card in self.recoveryzone):
                 self.recoveryzone.remove(card)
             else:
-                print("Throw an exception here")    # to do
+                print("Throw an exception here - trying to discard " +
+                      card.title)    # to do
             self.discards.append(card)
 
     def addtohand(self, card):
@@ -166,8 +176,9 @@ class PlayerBoard(object):
         more involved, most likely.
         """
         card = self.player.choosecardtoretrievefromdiscard(game, pbidx)
-        self.hand.append(card)
-        self.discards.remove(card)
+        if card is not None:
+            self.hand.append(card)
+            self.discards.remove(card)
 
     def cardbyindex(self, cardidx, deck="hand"):
         card = None
@@ -203,8 +214,8 @@ class PlayerBoard(object):
         return(retstr)
 
     def __str__(self):
-        return(self.printinplay() + self.printhand() + self.printrecover() +
-               self.printdiscards())
+        return("VP: " + str(self.victorypoints) + "\n" + self.printinplay() +
+               self.printhand() + self.printrecover() + self.printdiscards())
 
 if __name__ == '__main__':
     import Card
