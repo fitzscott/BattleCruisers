@@ -93,9 +93,10 @@ class RandomComputerPlayer(Player.Player):
         Only randomize over the other players that actually
         have cards in appropriate deck.
         """
+        # This needs to be re-written
         tgtpblist = []
         plidx = -1
-        for pbidx in game.playerboards:
+        for pbidx in game.playerboards:  # s/b range(len...)
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
                 if deck == "hand":
