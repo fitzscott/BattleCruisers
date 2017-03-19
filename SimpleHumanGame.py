@@ -25,20 +25,21 @@ class SimpleHumanGame(Game.Game):
                 pb.readytoplay(card)
                 print("Player board " + pb.player.name + ":")
                 print(pb)
-            input("--- --- ---   Hit Enter to contine")
+            input("--- --- ---   Hit 0 Enter to contine")
             g.playallcards()
             print("!!!   After")
             for pbidx in range(len(g.playerboards)):
                 pb = g.playerboards[pbidx]
                 print("Player board " + pb.player.name + ":")
                 print(pb)
-            input("--- --- ---   Hit Enter to contine")
+            input("--- --- ---   Hit 0 Enter to contine")
             g.endturn()
             print("!!!   Post turn")
             for pbidx in range(len(g.playerboards)):
                 pb = g.playerboards[pbidx]
                 print("Player board " + pb.player.name + ":")
                 print(pb)
+                input("--- --- ---   Hit 0 Enter to contine")
 
 if __name__ == '__main__':
     g = SimpleHumanGame(3)
