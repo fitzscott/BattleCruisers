@@ -39,14 +39,22 @@ class PlayerBoard(object):
 
     @property
     def recoveryzone(self):
-        return self._recovery
+        if self.checkredalert():
+            return self.inplay
+        else:
+            return self._recovery
 
     @property
     def hand(self):
-        return self._hand
+        if self.checkredalert():
+            return self._inplay
+        else:
+            return self._hand
 
     @property
     def redalert(self):
+        # Is this useful, or should the checkredalert functionality be
+        # used here?
         return self._redalert
 
     @property
@@ -100,12 +108,21 @@ class PlayerBoard(object):
         done after the recover step, as we don't want the card
         going directly to the player's hand.
         """
-        for card in self.recoveryzone:
-            self.hand.append(card)
-            self.recoveryzone.remove(card)
-        for card in self.inplay:
-            self.recoveryzone.append(card)
-            self.inplay.remove(card)
+        if self.checklost():
+            print("Player " + self.player.name + " lost!")
+            self.victorypoints = 0
+        elif self.checkredalert():
+            # there can be only one
+            lastcard = self.inplay[0]
+            self.inplay.remove(lastcard)
+            self.hand.append(lastcard)
+        else:
+            for card in self.recoveryzone:
+                self.hand.append(card)
+                self.recoveryzone.remove(card)
+            for card in self.inplay:
+                self.recoveryzone.append(card)
+                self.inplay.remove(card)
         if self.protected > 0:
             self.protected = self.protected - 1
         if self.disabled > 0:
@@ -141,15 +158,23 @@ class PlayerBoard(object):
             self.discards.append(card)
 
     def addtohand(self, card):
-        self.hand.append(card)
+        self._hand.append(card)
 
     def checkredalert(self):
         """ If there is only 1 card in the combined piles of
         In Play, Recovery Zone, and Hand, then the board is in
         red alert mode.
         """
-        if len(self.hand) + len(self.inplay) + len(self.recoveryzone) == 1:
+        # Want to use hidden fields instead of properties, since
+        # hand & recovery properties mutate when only one card
+        # is left (i.e. board is in red alert state).
+        totalcards = len(self._hand) + len(self._inplay) \
+            + len(self._recovery)
+        if totalcards == 1:
             self._redalert = True
+        elif totalcards > 1:
+            # This covers "recovering" from red alert - back to normal
+            self._redalert = False
         return(self._redalert)
 
     def checklost(self):
@@ -189,26 +214,39 @@ class PlayerBoard(object):
                 card = self.recoveryzone[cardidx]
         return(card)
 
+    def handresoltot(self):
+        """
+        This is needed in case we have a tie among victory
+        points and hand size.
+        """
+        tot = 0
+        # print("    Starting handresoltot")
+        for card in self._hand:
+            # print("handresoltot adding " + card.title + "(" +
+            #      str(card.rank) + ")")
+            tot += card.rank
+        return(tot)
+
     def printinplay(self):
-        retstr = "----  In play:\n"
+        retstr = "    ----  In play:\n"
         for card in self.inplay:
             retstr += card.title + ": " + str(card.rank) + "\n"
         return(retstr)
 
     def printhand(self):
-        retstr = "----  Hand:\n"
+        retstr = "    ----  Hand:\n"
         for card in self.hand:
             retstr += card.title + ": " + str(card.rank) + "\n"
         return(retstr)
 
     def printrecover(self):
-        retstr = "----  Recovery Zone:\n"
+        retstr = "    ----  Recovery Zone:\n"
         for card in self.recoveryzone:
             retstr += card.title + ": " + str(card.rank) + "\n"
         return(retstr)
 
     def printdiscards(self):
-        retstr = "----  Discards:\n"
+        retstr = "    ----  Discards:\n"
         for card in self.discards:
             retstr += card.title + ": " + str(card.rank) + "\n"
         return(retstr)

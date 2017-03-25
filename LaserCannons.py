@@ -19,22 +19,15 @@ class LaserCannons(Card.Card):
         self.add_symbol(Card.Card.Symbols[4])   # Weapons
 
     def main_effect(self, game, pbidx):
-        myboard = game.playerboards[pbidx]
-        for pb in game.playerboards:
-            if pb != myboard and pb.protected == 0:
-                # (cardidx, deck) = \
-                #    pb.player.choosecardtodiscard(game, pbidx,
-                #                                  ["hand", "recovery"])
-                # card = pb.cardbyindex(cardidx, deck)
-                card = pb.player.choosecardtodiscard(game, pbidx,
-                                                     ["hand", "recovery"])
-                pb.discard(card, ["hand", "recovery"])
+        for pbothidx in range(len(game.playerboards)):
+            pbo = game.playerboards[pbothidx]
+            if pbothidx != pbidx and pbo.protected == 0:
+                card = pbo.player.choosecardtodiscard(game, pbothidx,
+                                                      ["hand", "recovery"])
+                pbo.discard(card, ["hand", "recovery"])
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
-        # (cardidx, deck) = myboard.player.\
-        #    choosecardtodiscard(game, pbidx, ["hand", "recovery"])
-        # card = myboard.cardbyindex(cardidx, deck)
         card = myboard.player.choosecardtodiscard(game, pbidx,
                                                   ["hand", "recovery"])
         print("Discarding card " + card.title)
@@ -96,14 +89,14 @@ if __name__ == '__main__':
         if card.title != "Laser Cannons":
             tomv.append(card)
     for card in tomv:
-        # print("Moving " + card.title + " from player 1 to RZ")
         g.playerboards[1].recoveryzone.append(card)
         g.playerboards[1].hand.remove(card)
+    # for players 0 & 1, move the LC from discards to hand
+    for pidx in range(2):
+        g.playerboards[pidx].discards.remove(lc)
+        g.playerboards[pidx].hand.append(lc)
     print("####    1 w/all hand, 1 w/ all RZ    ####")
     for pb in g.playerboards:
-        # mvcard = pb.hand[1]
-        # pb.hand.remove(mvcard)
-        # pb.recoveryzone.append(mvcard)
         pb.readytoplay(lc)
         print(pb)
     g.playallcards()    # should all be clashes

@@ -43,7 +43,8 @@ class SimpleHumanGame(Game.Game):
 
 if __name__ == '__main__':
     g = SimpleHumanGame(3)
-    plrz = ["Rosie", "Gennifer", "Beatrice"]
+    # plrz = ["Rosie", "Gennifer", "Beatrice"]
+    plrz = ["Grace", "Pam", "Olivia"]
     for shpi in range(3):
         shp = SimpleHumanPlayer.SimpleHumanPlayer(plrz[shpi])
         g.playerboards[shpi].player = shp

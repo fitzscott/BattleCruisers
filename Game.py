@@ -92,13 +92,16 @@ class Game(object):
             else:
                 carddupes[cardrank] = "single"
         for (cardrank, pbidx) in cardstoplay:
-            if self.playerboards[pbidx].disabled == 0:
-                if carddupes[cardrank] == "single":
-                    self.playerboards[pbidx].inplay[0].main_effect(self,
-                                                                   pbidx)
-                else:
-                    self.playerboards[pbidx].inplay[0].clash_effect(self,
-                                                                    pbidx)
+            # It's possible that a card in play at the beginning of a
+            # turn will have been discarded before it gets played.
+            if len(self.playerboards[pbidx].inplay) > 0:
+                card = self.playerboards[pbidx].inplay[0]
+                print("Playing card " + card.title)
+                if self.playerboards[pbidx].disabled == 0:
+                    if carddupes[cardrank] == "single":
+                        card.main_effect(self, pbidx)
+                    else:
+                        card.clash_effect(self, pbidx)
 
     def endturn(self):
         cardstoplay = self.getcardstoplay()
@@ -106,12 +109,56 @@ class Game(object):
             if self.playerboards[pbidx].disabled == 0:
                 self.playerboards[pbidx].inplay[0].end_of_turn_effect(self,
                                                                       pbidx)
-        for pb in self.playerboards:
+        players_left = len(self.playerboards)
+        players_vp = []
+        for pbi in range(len(self.playerboards)):
+            pb = self.playerboards[pbi]
             pb.endplay()
             pb.checkredalert()
             if pb.checklost():
                 # Need something more here
-                print(pb.player.name + " has lost.")
+                # print(pb.player.name + " has lost.")
+                players_left -= 1
+            elif pb.victorypoints >= 15:
+                players_vp.append((pb.victorypoints, len(pb.hand),
+                                  pb.handresoltot(), pbi))
+
+        gameover = False
+        if len(players_vp) >= 1:
+            # print("We have a victorious winner!")
+            players_vp.sort()
+            print(players_vp)
+            if len(players_vp) == 1:
+                winner = self.playerboards[players_vp[0][3]]
+            else:
+                # This section is not working.  Fix.
+                vp1 = self.playerboards[players_vp[0][3]].victorypoints
+                vp2 = self.playerboards[players_vp[1][3]].victorypoints
+                hnd1 = len(self.playerboards[players_vp[0][3]].hand)
+                hnd2 = len(self.playerboards[players_vp[1][3]].hand)
+                hrt1 = self.playerboards[players_vp[0][3]].handresoltot()
+                hrt2 = self.playerboards[players_vp[1][3]].handresoltot()
+                if vp1 > vp2 or hnd1 > hnd2 or hrt1 > hrt2:
+                    winner = self.playerboards[players_vp[0][3]]
+                else:
+                    winner = None
+            if winner is not None:
+                print("Player " + winner.player.name +
+                      " is the victorious winner!")
+            else:
+                print("We have a tie...  play again.")
+
+            gameover = True
+        elif players_left == 1:
+            # print("We have a surviving winner!")
+            for pb in self.playerboards:
+                if not pb.checklost():
+                    print("Player " + pb.player.name + " has survived & won!")
+            gameover = True
+        elif players_left == 0:
+            print("All players have failed to survive.")
+            gameover = True
+        return(gameover)
 
 if __name__ == '__main__':
     c1 = Card.Card("Not a Card", 1)
@@ -130,4 +177,10 @@ if __name__ == '__main__':
     g.playerboards[2].readytoplay(c2)
     g.playerboards[3].readytoplay(c3)
     g.playallcards()
+    g.endturn()
+    # test a tie
+    for idx in range(4):
+        pb = g.playerboards[idx]
+        pb.victorypoints = 15
+        print(pb)
     g.endturn()

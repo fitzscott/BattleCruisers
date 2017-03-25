@@ -31,7 +31,8 @@ class RandomGame(Game.Game):
                 pb = g.playerboards[pbidx]
                 print("Player board " + pb.player.name + ":")
                 print(pb)
-            g.endturn()
+            if g.endturn():    # we have a winner (or a bunch of losers)
+                break
             print("!!!   Post turn")
             for pbidx in range(len(g.playerboards)):
                 pb = g.playerboards[pbidx]
@@ -53,4 +54,4 @@ if __name__ == '__main__':
         pb.discard(c, ["hand"])
         c = pb.player.choosecardtosendtorecovery(g, dnr)
         pb.sendtorecovery(c)
-    g.playrounds(10)
+    g.playrounds(20)
