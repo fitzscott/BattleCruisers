@@ -116,8 +116,6 @@ class Game(object):
             pb.endplay()
             pb.checkredalert()
             if pb.checklost():
-                # Need something more here
-                # print(pb.player.name + " has lost.")
                 players_left -= 1
             elif pb.victorypoints >= 15:
                 players_vp.append((pb.victorypoints, len(pb.hand),
@@ -125,21 +123,17 @@ class Game(object):
 
         gameover = False
         if len(players_vp) >= 1:
-            # print("We have a victorious winner!")
-            players_vp.sort()
+            players_vp.sort(reverse=True)
             print(players_vp)
             if len(players_vp) == 1:
                 winner = self.playerboards[players_vp[0][3]]
             else:
-                # This section is not working.  Fix.
-                vp1 = self.playerboards[players_vp[0][3]].victorypoints
-                vp2 = self.playerboards[players_vp[1][3]].victorypoints
-                hnd1 = len(self.playerboards[players_vp[0][3]].hand)
-                hnd2 = len(self.playerboards[players_vp[1][3]].hand)
-                hrt1 = self.playerboards[players_vp[0][3]].handresoltot()
-                hrt2 = self.playerboards[players_vp[1][3]].handresoltot()
-                if vp1 > vp2 or hnd1 > hnd2 or hrt1 > hrt2:
-                    winner = self.playerboards[players_vp[0][3]]
+                p1 = self.playerboards[players_vp[0][3]]
+                p2 = self.playerboards[players_vp[1][3]]
+                if p1.victorypoints > p2.victorypoints or \
+                    len(p1.hand) > len(p2.hand) or \
+                        p1.handresoltot() > p2.handresoltot():
+                    winner = p1
                 else:
                     winner = None
             if winner is not None:
