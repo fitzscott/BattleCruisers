@@ -46,10 +46,11 @@ class PlayerBoard(object):
 
     @property
     def hand(self):
-        if self.checkredalert():
-            return self._inplay
-        else:
-            return self._hand
+        # if self.checkredalert():
+        #    return self._inplay
+        # else:
+        #    return self._hand
+        return self._hand
 
     @property
     def redalert(self):
@@ -113,8 +114,12 @@ class PlayerBoard(object):
             self.victorypoints = 0
         elif self.checkredalert():
             # there can be only one
-            lastcard = self.inplay[0]
-            self.inplay.remove(lastcard)
+            if len(self.inplay) == 1:
+                lastcard = self.inplay[0]
+                self.inplay.remove(lastcard)
+            elif len(self.recoveryzone) == 1:
+                lastcard = self.recoveryzone[0]
+                self.recoveryzone.remove(lastcard)
             self.hand.append(lastcard)
         else:
             for card in self.recoveryzone:

@@ -33,7 +33,8 @@ class SimpleHumanGame(Game.Game):
                 print("Player board " + pb.player.name + ":")
                 print(pb)
             input("--- --- ---   Hit 0 Enter to contine")
-            g.endturn()
+            if g.endturn():     # winner winner chicken dinner
+                break
             print("!!!   Post turn")
             for pbidx in range(len(g.playerboards)):
                 pb = g.playerboards[pbidx]
@@ -57,4 +58,4 @@ if __name__ == '__main__':
         pb.discard(c, ["hand"])
         c = pb.player.choosecardtosendtorecovery(g, dnr)
         pb.sendtorecovery(c)
-    g.playrounds(10)
+    g.playrounds(30)

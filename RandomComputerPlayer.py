@@ -14,7 +14,7 @@ class RandomComputerPlayer(Player.Player):
     """
     RandomComputerPlayer -
     Implement the methods in Player, randomizing all the choices.
-    Not the smartest bulb in the chandelier.
+    Not the brightest bulb in the chandelier.
     """
 
     def __init__(self, name):

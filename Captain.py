@@ -19,7 +19,7 @@ class Captain(Card.Card):
         self.add_symbol(Card.Card.Symbols[3])
 
     def main_effect(self, game, pbidx):
-        print("Called " + self.title + " main_effect")
+        # print("Called " + self.title + " main_effect")
         myboard = game.playerboards[pbidx]
         myboard.victorypoints = myboard.victorypoints + 3
 
