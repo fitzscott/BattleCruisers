@@ -258,8 +258,13 @@ class PlayerBoard(object):
         return(retstr)
 
     def __str__(self):
-        return("VP: " + str(self.victorypoints) + "\n" + self.printinplay() +
-               self.printhand() + self.printrecover() + self.printdiscards())
+        if self.redalert:
+            ramsg = "Red Alert\n"
+        else:
+            ramsg = "Normal\n"
+        return(ramsg + "VP: " + str(self.victorypoints) + "\n" +
+               self.printinplay() + self.printhand() +
+               self.printrecover() + self.printdiscards())
 
 if __name__ == '__main__':
     import Card
