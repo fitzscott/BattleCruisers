@@ -43,24 +43,30 @@ class RandomComputerPlayer(Player.Player):
         if decksize > 0:
             cardidx = random.randint(0, decksize-1)
             card = pickfrom[cardidx]
+            print(self.name + " picked " + card.title + " from " + str(deck))
         return(card)
 
     def choosecardtoplay(self, game, myphbidx):
         return(self.chooserandomcard(game, myphbidx, ["hand"]))
 
     def choosecardtodiscard(self, game, myphbidx, deck):
+        print("..... " + self.name + " choosing card to discard")
         return(self.chooserandomcard(game, myphbidx, deck))
 
     def choosecardtoretrievefromdiscard(self, game, myphbidx):
+        print("..... " + self.name + " choosing card to retrieve from discard")
         return(self.chooserandomcard(game, myphbidx, ["discards"]))
 
     def choosecardtoremovefromdiscard(self, game, myphbidx):
+        print("..... " + self.name + " choosing card to remove from discard")
         return(self.chooserandomcard(game, myphbidx, ["discards"]))
 
     def choosecardtosendtorecovery(self, game, myphbidx):
+        print("..... " + self.name + " choosing card to send to recovery")
         return(self.chooserandomcard(game, myphbidx, ["hand"]))
 
     def choosecardtoswap(self, game, myphbidx, deck):
+        print("..... " + self.name + " choosing card to swap")
         return(self.chooserandomcard(game, myphbidx, deck))
 
     def choosecardtotake(self, game, myphbidx):

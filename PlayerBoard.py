@@ -120,7 +120,8 @@ class PlayerBoard(object):
             elif len(self.recoveryzone) == 1:
                 lastcard = self.recoveryzone[0]
                 self.recoveryzone.remove(lastcard)
-            self.hand.append(lastcard)
+            if len(self.hand) == 0:
+                self.hand.append(lastcard)
         else:
             for card in self.recoveryzone:
                 self.hand.append(card)
