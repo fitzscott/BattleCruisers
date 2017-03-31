@@ -23,12 +23,14 @@ class RandomComputerPlayer(Player.Player):
     def getmyboard(self, game, myphbidx):
         return game.playerboards[myphbidx]
 
-    def chooserandomcard(self, game, myphbidx, deck):
+    def chooserandomcard(self, game, phbidx, deck):
         """
         Pick a card, any card
         """
         card = None
-        mb = self.getmyboard(game, myphbidx)
+        # mb = self.getmyboard(game, myphbidx)
+        mb = game.playerboards[phbidx]
+        print("Choosing card from player " + mb.player.name)
         pickfrom = []
         if "hand" in deck:
             pickfrom.extend(mb.hand)
@@ -92,19 +94,22 @@ class RandomComputerPlayer(Player.Player):
         return(game.playerboards[pbilist[pbichoice]])
 
     def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
-        pass
+        # Note that this uses the target player index
+        return(self.chooserandomcard(game, tgtpbidx, deck))
 
     def chooseplayertotakecardfrom(self, game, myphbidx, deck="hand"):
         """
         Only randomize over the other players that actually
         have cards in appropriate deck.
         """
-        # This needs to be re-written
+        # Still need to re-write this using a list of deck options
         tgtpblist = []
         plidx = -1
-        for pbidx in game.playerboards:  # s/b range(len...)
+        for pbidx in range(len(game.playerboards)):
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
+                if tgtboard.protected:
+                    continue
                 if deck == "hand":
                     pickfrom = tgtboard.hand
                 elif deck == "recovery":
@@ -116,8 +121,10 @@ class RandomComputerPlayer(Player.Player):
                 if len(pickfrom) > 0:
                     tgtpblist.append(pbidx)
         tgtlistsize = len(tgtpblist)
+        print("Target list for " + deck + " is " + str(tgtpblist))
         if tgtlistsize > 0:
-            plidx = random.randint(0, tgtlistsize-1)
+            chosenplidx = random.randint(0, tgtlistsize-1)
+            plidx = tgtpblist[chosenplidx]
         return(plidx)
 
     def chooseeffecttoignore(self, game, myphbidx):

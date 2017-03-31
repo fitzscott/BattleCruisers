@@ -21,24 +21,36 @@ class AttackBots(Card.Card):
 
     def main_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
-        pl = myboard.player.chooseplayertotakecardfrom(game, pbidx, "recovery")
-        if pl >= 0:
-            cardidx = myboard.player.choosecardfromplayer(game, pbidx,
-                                                          "recovery", pl)
+        pl = myboard.player.chooseplayertotakecardfrom(game, pbidx,
+                                                       "recovery")
+        print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
+        print("My RZ: " + myboard.printrecover())
+        if pl < 0:
+            print("No choices among recovery zones")
+        else:
             targetpb = game.playerboards[pl]
-            card = targetpb.recoveryzone[cardidx]
-            # player chooser should not choose a protected opponent,
-            # but if it does, disallow the effect.
-            if targetpb.protected == 0:
-                myboard.hand.append(card)
-                targetpb.recoveryzone.remove(card)
+            print("Chosen RZ: " + targetpb.printrecover())
+            if pl >= 0:
+                card = myboard.player.choosecardfromplayer(game, pbidx,
+                                                           ["recovery"], pl)
+                if card is not None:
+                    print("Chose card: " + card.title + ", rank: " +
+                          str(card.rank))
+                    # player chooser should not choose a protected opponent,
+                    # but if it does, disallow the effect.
+                    if targetpb.protected == 0:
+                        myboard.hand.append(card)
+                        targetpb.recoveryzone.remove(card)
+                    else:
+                        print("Cannot steal a card from a protected player")
+                else:
+                    print("How'd we get no cards?")
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
-        rzcardidx = myboard.player.choosecardtodiscard(game, pbidx, "recovery")
-        if rzcardidx >= 0:
-            rzcard = myboard.recoveryzone[rzcardidx]
-            myboard.discard(rzcard, "recovery")
+        rzcard = myboard.player.choosecardtodiscard(game, pbidx, ["recovery"])
+        if rzcard is not None:
+            myboard.discard(rzcard, ["recovery"])
 
 if __name__ == '__main__':
     ab = AttackBots()
@@ -53,7 +65,7 @@ if __name__ == '__main__':
         # This definition will not work in the general case -
         # need to return which deck it's being discarded from.
         def choosecardtodiscard(self, game, myphbidx, deck="hand"):
-            return(0)
+            return(game.playerboards[myphbidx].recoveryzone[0])
 
         def chooseplayertotakecardfrom(self, game, myphbidx, deck="hand"):
             return(0)

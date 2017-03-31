@@ -19,23 +19,23 @@ class RandomGame(Game.Game):
         for gameround in range(numrounds):
             print("**********     Round " + str(gameround) + "     ********")
             print("!!!   Before")
-            for pbidx in range(len(g.playerboards)):
-                pb = g.playerboards[pbidx]
-                card = pb.player.choosecardtoplay(g, pbidx)
+            for pbidx in range(len(self.playerboards)):
+                pb = self.playerboards[pbidx]
+                card = pb.player.choosecardtoplay(self, pbidx)
                 pb.readytoplay(card)
                 print("Player board " + pb.player.name + ":")
                 print(pb)
-            g.playallcards()
+            self.playallcards()
             print("!!!   After")
-            for pbidx in range(len(g.playerboards)):
-                pb = g.playerboards[pbidx]
+            for pbidx in range(len(self.playerboards)):
+                pb = self.playerboards[pbidx]
                 print("Player board " + pb.player.name + ":")
                 print(pb)
-            if g.endturn():    # we have a winner (or a bunch of losers)
+            if self.endturn():    # we have a winner (or a bunch of losers)
                 break
             print("!!!   Post turn")
-            for pbidx in range(len(g.playerboards)):
-                pb = g.playerboards[pbidx]
+            for pbidx in range(len(self.playerboards)):
+                pb = self.playerboards[pbidx]
                 print("Player board " + pb.player.name + ":")
                 print(pb)
 
