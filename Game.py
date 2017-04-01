@@ -94,10 +94,11 @@ class Game(object):
         for (cardrank, pbidx) in cardstoplay:
             # It's possible that a card in play at the beginning of a
             # turn will have been discarded before it gets played.
-            if len(self.playerboards[pbidx].inplay) > 0:
-                card = self.playerboards[pbidx].inplay[0]
-                print("Playing card " + card.title)
-                if self.playerboards[pbidx].disabled == 0:
+            currboard = self.playerboards[pbidx]
+            if len(currboard.inplay) > 0:
+                card = currboard.inplay[0]
+                print(currboard.player.name + " playing " + card.title)
+                if currboard.disabled == 0:
                     if carddupes[cardrank] == "single":
                         card.main_effect(self, pbidx)
                     else:

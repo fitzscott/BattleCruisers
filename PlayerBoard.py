@@ -40,16 +40,12 @@ class PlayerBoard(object):
     @property
     def recoveryzone(self):
         if self.checkredalert():
-            return self.inplay
+            return self._inplay
         else:
             return self._recovery
 
     @property
     def hand(self):
-        # if self.checkredalert():
-        #    return self._inplay
-        # else:
-        #    return self._hand
         return self._hand
 
     @property
@@ -113,15 +109,10 @@ class PlayerBoard(object):
             print("Player " + self.player.name + " lost!")
             self.victorypoints = 0
         elif self.checkredalert():
-            # there can be only one
-            if len(self.inplay) == 1:
+            if len(self._hand) == 0:
                 lastcard = self.inplay[0]
-                self.inplay.remove(lastcard)
-            elif len(self.recoveryzone) == 1:
-                lastcard = self.recoveryzone[0]
-                self.recoveryzone.remove(lastcard)
-            if len(self.hand) == 0:
                 self.hand.append(lastcard)
+                self.inplay.remove(lastcard)
         else:
             for card in self.recoveryzone:
                 self.hand.append(card)
@@ -178,6 +169,12 @@ class PlayerBoard(object):
             + len(self._recovery)
         if totalcards == 1:
             self._redalert = True
+            if len(self._recovery) > 0:
+                # can be only one - ship to inplay
+                card = self._recovery[0]
+                self._inplay.append(card)
+                self._recovery.remove(card)
+                print("Red Alert " + self.player.name + "-> recovery 2 play")
         elif totalcards > 1:
             # This covers "recovering" from red alert - back to normal
             self._redalert = False
@@ -247,8 +244,14 @@ class PlayerBoard(object):
 
     def printrecover(self):
         retstr = "    ----  Recovery Zone:\n"
-        for card in self.recoveryzone:
-            retstr += card.title + ": " + str(card.rank) + "\n"
+        if self.checkredalert():
+            retstr += "    [same as in play]\n"
+            # remove this later
+            for card in self._recovery:
+                retstr += card.title.upper() + ", " + str(card.rank) + "\n"
+        else:
+            for card in self.recoveryzone:
+                retstr += card.title + ": " + str(card.rank) + "\n"
         return(retstr)
 
     def printdiscards(self):
@@ -258,7 +261,7 @@ class PlayerBoard(object):
         return(retstr)
 
     def __str__(self):
-        if self.redalert:
+        if self.checkredalert():
             ramsg = "Red Alert\n"
         else:
             ramsg = "Normal\n"
@@ -281,6 +284,7 @@ if __name__ == '__main__':
         print("One card => red alert")
     pb.addtohand(c2)
     pb.addtohand(c3)
+    # assert(not pb.checkredalert())
     print(pb)
     print("++++++++++++  Playing Precision Strike")
     pb.readytoplay(c1)
