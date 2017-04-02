@@ -91,8 +91,12 @@ class RandomComputerPlayer(Player.Player):
             if pbidx != myphbidx and \
                     game.playerboards[pbidx].victorypoints > 0:
                 pbilist.append(pbidx)
-        pbichoice = random.randint(0, len(pbilist))
-        return(game.playerboards[pbilist[pbichoice]])
+        if len(pbilist) > 0:
+            pbichoice = random.randint(0, len(pbilist))
+            tgtpb = game.playerboards[pbilist[pbichoice]]
+        else:
+            tgtpb = None
+        return(tgtpb)
 
     def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
         # Note that this uses the target player index
@@ -130,6 +134,7 @@ class RandomComputerPlayer(Player.Player):
 
     def chooseplayertodisable(self, game, myphbidx, deck):
         tgtpblist = []
+        plidx = -1
         for pbidx in range(len(game.playerboards)):
             pb = game.playerboards[pbidx]
             if pbidx != myphbidx and pb.disabled == 0:
