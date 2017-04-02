@@ -28,6 +28,7 @@ class PlayerBoard(object):
         self._protected = 0
         self._victorypoints = 1    # everyone starts with 1
         self._player = None
+        self._last_round_card = None
 
     @property
     def inplay(self):
@@ -60,6 +61,8 @@ class PlayerBoard(object):
 
     @disabled.setter
     def disabled(self, val):
+        if val < 0:
+            val = 0
         self._disabled = val
 
     @property
@@ -68,6 +71,8 @@ class PlayerBoard(object):
 
     @protected.setter
     def protected(self, val):
+        if val < 0:
+            val = 0
         self._protected = val
 
     @property
@@ -87,6 +92,32 @@ class PlayerBoard(object):
     @player.setter
     def player(self, val):
         self._player = val
+
+    # To do:  last round's card can have a continuing effect, so
+    # keep track of it, and implement methods to handle it in the
+    # individual card classes.
+    @property
+    def lastroundcard(self):
+        return(self._last_round_card)
+
+    @lastroundcard.setter
+    def lastroundcard(self, val):
+        self._last_round_card = val
+
+    def defense(self, game, pbidx, effect):
+        """
+        Check whether the card in play or from last round have a defense
+        against opponents' attacks.
+        effect:  main_effect, vp_theft, card_discard, card_theft
+        """
+        defense = False
+        if len(self.inplay) > 0:
+            defense = self.inplay[0].defense(game, pbidx, effect, "this")
+        if not defense:   # if we've already established a defense, we're done
+            if self.lastroundcard is not None:
+                defense = \
+                    self.lastroundcard.defense(game, pbidx, effect, "last")
+        return(defense)
 
     def readytoplay(self, card):
         """ Move a card from your hand to the "in play" area.
@@ -114,16 +145,17 @@ class PlayerBoard(object):
                 self.hand.append(lastcard)
                 self.inplay.remove(lastcard)
         else:
+            if len(self.inplay) == 0:
+                self.lastroundcard = None
             for card in self.recoveryzone:
                 self.hand.append(card)
                 self.recoveryzone.remove(card)
             for card in self.inplay:
+                self.lastroundcard = card
                 self.recoveryzone.append(card)
                 self.inplay.remove(card)
-        if self.protected > 0:
-            self.protected = self.protected - 1
-        if self.disabled > 0:
-            self.disabled = self.disabled - 1
+        self.protected -= 1
+        self.disabled -= 1
 
     def recover(self):
         """ Move the card(s) from the recovery zone to the
@@ -143,16 +175,19 @@ class PlayerBoard(object):
         recovery zone.
         """
         if card is not None:
-            if ("hand" in piledescr) and (card in self.hand):
-                self.hand.remove(card)
-            elif ("inplay" in piledescr) and (card in self.inplay):
-                self.inplay.remove(card)
-            elif ("recovery" in piledescr) and (card in self.recoveryzone):
-                self.recoveryzone.remove(card)
-            else:
-                print("Throw an exception here - trying to discard " +
-                      card.title)    # to do
-            self.discards.append(card)
+            # First, check if we have a redirect for discards
+            if len(self.inplay) > 0 and not \
+              self.inplay[0].redirect(self, "discard"):
+                if ("hand" in piledescr) and (card in self.hand):
+                    self.hand.remove(card)
+                elif ("inplay" in piledescr) and (card in self.inplay):
+                    self.inplay.remove(card)
+                elif ("recovery" in piledescr) and (card in self.recoveryzone):
+                    self.recoveryzone.remove(card)
+                else:
+                    print("Throw an exception here - trying to discard " +
+                          card.title)    # to do
+                self.discards.append(card)
 
     def addtohand(self, card):
         self._hand.append(card)

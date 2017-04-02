@@ -34,7 +34,10 @@ class SpecialOps(Card.Card):
                 if pbidxothers != pbidx:
                     pbother = game.playerboards[pbidxothers]
                     # make sure other board is not protected
-                    if pbother.protected == 0 and pbother.victorypoints > 0:
+                    if pbother.protected == 0 and pbother.victorypoints > 0 \
+                        and not pbother.defense(game, pbidx, ["main_effect",
+                                                              "vp_theft"]):
+                        # check if the other board has a VP defense
                         pbother.victorypoints -= 1
                         myboard.victorypoints += 1
 

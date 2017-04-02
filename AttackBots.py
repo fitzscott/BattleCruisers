@@ -22,29 +22,28 @@ class AttackBots(Card.Card):
     def main_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
         pl = myboard.player.chooseplayertotakecardfrom(game, pbidx,
-                                                       "recovery")
+                                                       ["recovery"])
         print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
         print("My RZ: " + myboard.printrecover())
-        if pl < 0:
-            print("No choices among recovery zones")
-        else:
+        if pl >= 0:
             targetpb = game.playerboards[pl]
             print("Chosen RZ: " + targetpb.printrecover())
-            if pl >= 0:
-                card = myboard.player.choosecardfromplayer(game, pbidx,
-                                                           ["recovery"], pl)
-                if card is not None:
-                    print("Chose card: " + card.title + ", rank: " +
-                          str(card.rank))
-                    # player chooser should not choose a protected opponent,
-                    # but if it does, disallow the effect.
-                    if targetpb.protected == 0:
-                        myboard.hand.append(card)
-                        targetpb.recoveryzone.remove(card)
-                    else:
-                        print("Cannot steal a card from a protected player")
+            card = myboard.player.choosecardfromplayer(game, pbidx,
+                                                       ["recovery"], pl)
+            if card is not None:
+                print("Chose card: " + card.title + ", rank: " +
+                      str(card.rank))
+                # player chooser should not choose a protected opponent,
+                # but if it does, disallow the effect.
+                if targetpb.protected == 0:
+                    myboard.hand.append(card)
+                    targetpb.recoveryzone.remove(card)
                 else:
-                    print("How'd we get no cards?")
+                    print("Cannot steal a card from a protected player")
+            else:
+                print("How'd we get no cards?")
+        else:
+            print("No choices among recovery zones")
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
@@ -67,7 +66,7 @@ if __name__ == '__main__':
         def choosecardtodiscard(self, game, myphbidx, deck="hand"):
             return(game.playerboards[myphbidx].recoveryzone[0])
 
-        def chooseplayertotakecardfrom(self, game, myphbidx, deck="hand"):
+        def chooseplayertotakecardfrom(self, game, myphbidx, deck=["hand"]):
             return(0)
 
     g = Game.Game(2)

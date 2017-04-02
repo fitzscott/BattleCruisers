@@ -9,12 +9,15 @@ import random
 
 # import all the types of cards here
 import Ambassador
+import ArmorPlating
 import AttackBots
 import Captain
 import CombatTactics
+import DisruptorRay
 import EscapePod
 import LaserCannons
 import RecklessPilot
+import Salvage
 import Shields
 import SpecialOps
 import SpyDrone
@@ -29,13 +32,16 @@ class CardSet(object):
     cards = {
         1:  SpyDrone.SpyDrone,
         3:  Shields.Shields,
+        9:  DisruptorRay.DisruptorRay,
         11: RecklessPilot.RecklessPilot,
         13: Captain.Captain,
         17: Ambassador.Ambassador,
         19: CombatTactics.CombatTactics,
+        20: ArmorPlating.ArmorPlating,
         22: SpecialOps.SpecialOps,
         29: AttackBots.AttackBots,
         31: LaserCannons.LaserCannons,
+        39: Salvage.Salvage,
         43: EscapePod.EscapePod
     }
 
@@ -61,8 +67,8 @@ class CardSet(object):
             for cardnum in CardSet.cards.keys():
                 keyset.append(cardnum)
             for swp in range(10000):
-                idx1 = random.randint(0, len(cards)-1)
-                idx2 = random.randint(0, len(cards)-1)
+                idx1 = random.randint(0, len(CardSet.cards)-1)
+                idx2 = random.randint(0, len(CardSet.cards)-1)
                 # swap 2 enries
                 tmp = keyset[idx1]
                 keyset[idx1] = keyset[idx2]

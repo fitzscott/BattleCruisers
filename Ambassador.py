@@ -42,6 +42,7 @@ class Ambassador(Card.Card):
 
 if __name__ == '__main__':
     import Game
+    import RandomComputerPlayer as RCP
 
     g = Game.Game(3)
     a = Ambassador()
@@ -53,6 +54,10 @@ if __name__ == '__main__':
     pb.victorypoints = 3
     a.clash_effect(g, 0)
     print("VP should be 2: " + str(pb.victorypoints))
+
+    for rcpi in range(3):
+        rcp = RCP.RandomComputerPlayer("Random Player " + str(rcpi+1))
+        g.playerboards[rcpi].player = rcp
 
     g.addtocardlist(a)
     c = Card.Card("Test", 50)

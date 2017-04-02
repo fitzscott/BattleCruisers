@@ -24,7 +24,20 @@ class SpyDrone(Card.Card):
         Swap spy drone w/ another card in hand.
         Inform game to re-figure card ordering.
         """
-        pass
+        myboard = game.playerboards[pbidx]
+        card = myboard.player.choosecardtoswap(game, pbidx, ["hand"])
+        if card is not None:
+            print("----- before SpyDrone swap")
+            print(myboard.printinplay())
+            print(myboard.printhand())
+            myboard.hand.append(self)
+            myboard.inplay.remove(self)
+            myboard.inplay.append(card)
+            myboard.hand.remove(card)
+            print("----- after SpyDrone swap")
+            print(myboard.printinplay())
+            print(myboard.printhand())
+            game.playallcards()     # works because SpyDrone is #1
 
     def end_of_turn_effect(self, game, pbidx):
         """

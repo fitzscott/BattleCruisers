@@ -29,6 +29,7 @@ class SmarterComputerPlayer(rcp.RandomComputerPlayer):
         """
         choosefrom = []
         card = None
+        factor = 3    # how much weighting will go to "better" choices
         myboard = game.playerboards[myphbidx]
         ranksinhand = []
         for mycard in myboard.hand:
@@ -41,7 +42,8 @@ class SmarterComputerPlayer(rcp.RandomComputerPlayer):
             if pbidx != myphbidx:
                 for theirrzcard in game.playerboards[pbidx].recoveryzone:
                     if theirrzcard.rank in ranksinhand:
-                        choosefrom.append(theirrzcard.rank)
+                        for f in range(factor):
+                            choosefrom.append(theirrzcard.rank)
         print(self.name + " final options: " + str(choosefrom))
 
         if len(choosefrom) > 0:

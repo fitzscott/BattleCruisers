@@ -62,6 +62,31 @@ class Card(object):
     def end_of_turn_effect(self, game, pbidx):
         pass
 
+    def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):
+        """
+        parameters:
+            effect:
+                main_effect:  Opponents' main effects
+                vp_theft: Stealing your victory points
+                card_discard: Forcing a card to be discarded
+                card_theft: Stealing your card
+            Can have combinations of effects, e.g. stealing victory
+                points as a main effect, as some defenses only apply
+                against, e.g. VP theft as a main effect, rather than
+                all main effects.
+            thisorlast:  Whether it applies to the card played this
+                round or last round.
+        """
+        return False
+
+    def redirect(self, pb, effect, thisorlast="this"):
+        """
+        Much like defense, but instead of disallowing an attack, it
+        redirects it toward another target.
+        Parameters are similar, but we only need our player board.
+        """
+        return False
+
 if __name__ == '__main__':
     c = Card("Spy Drone", 1)
     c.add_symbol("Technology")

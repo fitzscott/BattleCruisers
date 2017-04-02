@@ -34,6 +34,16 @@ class CombatTactics(Card.Card):
         if myboard.checkrecoveryforsymbol("Weapons"):
             myboard.returndiscardtohand(game, pbidx)
 
+    def clash_effect(self, game, pbidx):
+        """
+        Discard a card
+        """
+        myboard = game.playerboards[pbidx]
+        card = myboard.player.choosecardtodiscard(game, pbidx, ["hand",
+                                                                "recovery"])
+        if card is not None:
+            myboard.discard(card, ["recovery"])
+
 if __name__ == '__main__':
     import Game
 

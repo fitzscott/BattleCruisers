@@ -148,7 +148,8 @@ class Game(object):
             # print("We have a surviving winner!")
             for pb in self.playerboards:
                 if not pb.checklost():
-                    print("Player " + pb.player.name + " has survived & won!")
+                    print("Player " + pb.player.name +
+                          " is the surviving winner!")
             gameover = True
         elif players_left == 0:
             print("All players have failed to survive.")

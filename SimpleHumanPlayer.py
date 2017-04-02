@@ -22,12 +22,12 @@ class SimpleHumanPlayer(Player.Player):
     def name(self):
         return(self._name)
 
-    def choosecard(self, game, myphbidx, deck):
+    def choosecard(self, game, phbidx, deck):
         """
         Pick a card, any card
         """
         card = None
-        mb = self.getmyboard(game, myphbidx)
+        mb = self.getmyboard(game, phbidx)
         pickfrom = []
         if "hand" in deck:
             pickfrom.extend(mb.hand)
@@ -81,6 +81,10 @@ class SimpleHumanPlayer(Player.Player):
     def choosecardtotrade(self, game, myphbidx):
         pass
 
+    def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+        # Pass in the target player's board instead of our own.
+        return(self.choosecard(game, tgtpbidx, deck))
+
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
         print(self.name + ", choose a player to take VP from:")
         pbilist = []
@@ -95,30 +99,43 @@ class SimpleHumanPlayer(Player.Player):
         chosenidx = input("!!  Choose another player by number:")
         return(game.playerboards[pbilist[chosenidx]])
 
-    def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
-        pass
-
     def chooseplayertotakecardfrom(self, game, myphbidx, deck):
-        print(self.name + ", choose a player to take VP from:")
-        print("    (Doesn't work yet)")
+        print(self.name + ", choose a player to take a card from:")
         tgtpblist = []
         plidx = -1
+        optnum = 0
         for pbidx in range(len(game.playerboards)):
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
-                if deck == "hand":
-                    pickfrom = tgtboard.hand
-                elif deck == "recovery":
-                    pickfrom = tgtboard.recoveryzone
-                elif deck == "inplay":
-                    pickfrom = tgtboard.inplay
-                elif deck == "discards":
-                    pickfrom = tgtboard.discards
+                if not tgtboard.protected:
+                    pickfrom = self.combinedecks(tgtboard, deck)
+                else:
+                    pickfrom = []
                 if len(pickfrom) > 0:
                     tgtpblist.append(pbidx)
-                    print("    " + str(pbidx) + tgtboard.player.name)
-                    print(pickfrom)
-        print("Get some input here")        # to do
+                    print(str(optnum) + ") " + tgtboard.player.name + ":")
+                    for card in pickfrom:
+                        print("-> " + card.title + " (" + str(card.rank) + ")")
+                    optnum += 1
+        tgtlistsize = len(tgtpblist)
+        # print("Target list for " + str(deck) + " is " + str(tgtpblist))
+        if tgtlistsize > 0:
+            chosenplidx = input("!!  Choose another player by number: ")
+            plidx = tgtpblist[chosenplidx]
+
+        return(plidx)
+
+    def chooseplayertodisable(self, game, myphbidx, deck):
+        tgtpblist = []
+        for pbidx in range(len(game.playerboards)):
+            pb = game.playerboards[pbidx]
+            if pbidx != myphbidx and pb.disabled == 0:
+                tgtpblist.append(pbidx)
+        tgtlistsize = len(tgtpblist)
+        print("Disable list is " + str(tgtpblist))
+        if tgtlistsize > 0:
+            chosenplidx = input("!!  Choose another player by number: ")
+            plidx = tgtpblist[chosenplidx]
         return(plidx)
 
     def chooseeffecttoignore(self, game, myphbidx):

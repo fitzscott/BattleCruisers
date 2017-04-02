@@ -25,6 +25,18 @@ class Player(object):
     def getmyboard(self, game, myphbidx):
         return game.playerboards[myphbidx]
 
+    def combinedecks(self, tgtboard, deck):
+        pickfrom = []
+        if "hand" in deck:
+            pickfrom.extend(tgtboard.hand)
+        elif "recovery" in deck:
+            pickfrom.extend(tgtboard.recoveryzone)
+        elif "inplay" in deck:
+            pickfrom.extend(tgtboard.inplay)
+        elif "discards" in deck:
+            pickfrom.extend(tgtboard.discards)
+        return(pickfrom)
+
     def choosecardtoplay(self, game, myphbidx):
         """
         Pick a card from your hand to play
@@ -52,10 +64,13 @@ class Player(object):
     def choosecardtotrade(self, game, myphbidx):
         pass
 
+    def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+        pass
+
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
         pass
 
-    def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+    def chooseplayertodisable(self, game, myphbidx, deck):
         pass
 
     def chooseplayertotakecardfrom(self, game, myphbidx, deck):

@@ -31,16 +31,7 @@ class RandomComputerPlayer(Player.Player):
         # mb = self.getmyboard(game, myphbidx)
         mb = game.playerboards[phbidx]
         print("Choosing card from player " + mb.player.name)
-        pickfrom = []
-        if "hand" in deck:
-            pickfrom.extend(mb.hand)
-        if "recovery" in deck:
-            pickfrom.extend(mb.recoveryzone)
-        if "inplay" in deck:
-            pickfrom.extend(mb.inplay)
-        if "discards" in deck:
-            pickfrom.extend(mb.discards)
-
+        pickfrom = self.combinedecks(mb, deck)
         decksize = len(pickfrom)
         if decksize > 0:
             cardidx = random.randint(0, decksize-1)
@@ -69,7 +60,17 @@ class RandomComputerPlayer(Player.Player):
 
     def choosecardtoswap(self, game, myphbidx, deck):
         print("..... " + self.name + " choosing card to swap")
-        return(self.chooserandomcard(game, myphbidx, deck))
+        # This is a kludge - do not allow a swap for the same card
+        myboard = game.playerboards[myphbidx]
+        currcard = myboard.inplay[0]    # this must exist
+        # You get 20 chances
+        for itr in range(20):
+            swapcard = self.chooserandomcard(game, myphbidx, deck)
+            if swapcard is not None and swapcard.rank != currcard.rank:
+                break
+            else:
+                swapcard = None
+        return(swapcard)
 
     def choosecardtotake(self, game, myphbidx):
         """ Which card needs this?  """
@@ -97,31 +98,44 @@ class RandomComputerPlayer(Player.Player):
         # Note that this uses the target player index
         return(self.chooserandomcard(game, tgtpbidx, deck))
 
-    def chooseplayertotakecardfrom(self, game, myphbidx, deck="hand"):
+    def chooseplayertotakecardfrom(self, game, myphbidx, deck=["hand"]):
         """
         Only randomize over the other players that actually
         have cards in appropriate deck.
         """
-        # Still need to re-write this using a list of deck options
         tgtpblist = []
         plidx = -1
         for pbidx in range(len(game.playerboards)):
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
+                pickfrom = []
                 if tgtboard.protected:
                     continue
-                if deck == "hand":
-                    pickfrom = tgtboard.hand
-                elif deck == "recovery":
-                    pickfrom = tgtboard.recoveryzone
-                elif deck == "inplay":
-                    pickfrom = tgtboard.inplay
-                elif deck == "discards":
-                    pickfrom = tgtboard.discards
+                # it isn't strictly necessary to have a card list, as we
+                # could just sum up the sizes of decks to pick from, but
+                # I want to check that it is working correctly.
+                pickfrom = self.combinedecks(tgtboard, deck)
                 if len(pickfrom) > 0:
                     tgtpblist.append(pbidx)
+                    print("Target cards for " + self.name + " from " +
+                          tgtboard.player.name + ":")
+                    for card in pickfrom:
+                        print("-> " + card.title + " (" + str(card.rank) + ")")
         tgtlistsize = len(tgtpblist)
-        print("Target list for " + deck + " is " + str(tgtpblist))
+        print("Steal card list for " + str(deck) + " is " + str(tgtpblist))
+        if tgtlistsize > 0:
+            chosenplidx = random.randint(0, tgtlistsize-1)
+            plidx = tgtpblist[chosenplidx]
+        return(plidx)
+
+    def chooseplayertodisable(self, game, myphbidx, deck):
+        tgtpblist = []
+        for pbidx in range(len(game.playerboards)):
+            pb = game.playerboards[pbidx]
+            if pbidx != myphbidx and pb.disabled == 0:
+                tgtpblist.append(pbidx)
+        tgtlistsize = len(tgtpblist)
+        print("Disable list is " + str(tgtpblist))
         if tgtlistsize > 0:
             chosenplidx = random.randint(0, tgtlistsize-1)
             plidx = tgtpblist[chosenplidx]

@@ -30,8 +30,11 @@ class LaserCannons(Card.Card):
         myboard = game.playerboards[pbidx]
         card = myboard.player.choosecardtodiscard(game, pbidx,
                                                   ["hand", "recovery"])
-        print("Discarding card " + card.title)
-        myboard.discard(card, ["hand", "recovery"])
+        if card is not None:
+            print("Discarding card " + card.title)
+            myboard.discard(card, ["hand", "recovery"])
+        else:
+            print("Nothing in hand or RZ to discard")
 
 if __name__ == '__main__':
     import Game
