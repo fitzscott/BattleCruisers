@@ -51,8 +51,6 @@ class PlayerBoard(object):
 
     @property
     def redalert(self):
-        # Is this useful, or should the checkredalert functionality be
-        # used here?
         return self._redalert
 
     @property

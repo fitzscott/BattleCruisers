@@ -106,12 +106,18 @@ class Game(object):
             currboard = self.playerboards[pbidx]
             if len(currboard.inplay) > 0:
                 card = currboard.inplay[0]
-                if currboard.disabled <= 1:
+                if currboard.disabled != 2:    # 2 => disabled this round
                     print(currboard.player.name + " playing " + card.title)
+                    # cards might have been pulled out of the duplicate list
+                    # in the checkfordupes at the end of the loop.  If one
+                    # is gone, do not play it.
+                    if cardrank not in carddupes:
+                        continue
                     if carddupes[cardrank] == "single":
                         card.main_effect(self, pbidx)
                     else:
                         card.clash_effect(self, pbidx)
+                # If board is disabled, move its in-play card to the RZ
                 elif not currboard.checkredalert():
                     currboard.recoveryzone.append(card)
                     currboard.inplay.remove(card)
@@ -129,7 +135,7 @@ class Game(object):
     def endturn(self):
         cardstoplay = self.getcardstoplay()
         for (cardrank, pbidx) in cardstoplay:
-            if self.playerboards[pbidx].disabled == 0:
+            if self.playerboards[pbidx].disabled != 2:
                 self.playerboards[pbidx].inplay[0].end_of_turn_effect(self,
                                                                       pbidx)
         players_left = len(self.playerboards)
@@ -137,7 +143,8 @@ class Game(object):
         for pbi in range(len(self.playerboards)):
             pb = self.playerboards[pbi]
             pb.endplay()
-            pb.checkredalert()
+            # endplay calls checkredalert, so don't need this
+            # pb.checkredalert()
             if pb.checklost():
                 players_left -= 1
             elif pb.victorypoints >= 15:

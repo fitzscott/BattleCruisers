@@ -53,8 +53,26 @@ class CardSet(object):
 
     cardsets = {
         "Basic": [3, 11, 13, 22, 31, 43, 29, 17],
-        "The Big Bang": [2, 3, 6, 12, 15, 31, 33, 34]
-        # more to come
+        "The Big Bang": [2, 3, 6, 12, 15, 31, 33, 34],
+        "Crouching Liger, Hidden Dargon": [1, 4, 19, 30, 31, 39, 43, 9],
+        "Friendship Breaker": [5, 6, 11, 28, 29, 31, 39, 34],
+        "Clash of Captains": [1, 3, 20, 32, 34, 40, 13, 45],
+        "The Bad, the Worse, and the Ugly": [11, 16, 22, 23, 31, 43, 8, 9],
+        "Politics in a Space Fight": [12, 38, 30, 33, 20, 22, 11, 9],
+        "The Fast and the Fury": [6, 37, 38, 39, 19, 20, 23, 34],
+        "A Leaf on the Wind": [1, 5, 13, 22, 30, 40, 2, 7],
+        "Pirate Cove": [1, 4, 20, 32, 34, 40, 30, 17],
+        "Scorched Space": [9, 20, 23, 33, 38, 39, 28, 16],
+        "Final Mission": [11, 15, 16, 19, 22, 31, 44, 9],
+        "Glorious Victory": [7, 12, 13, 17, 23, 37, 5, 22],
+        "Tech Warefare": [6, 16, 29, 30, 33, 43, 1, 9],
+        "High Stakes": [1, 13, 17, 38, 39, 43, 8, 9],
+        "Race for the Cosmos": [2, 11, 12, 17, 22, 28, 7, 9],
+        "One Trick Pony": [2, 15, 19, 29, 32, 40, 8, 34],
+        "The Hot Potato": [1, 11, 20, 28, 40, 43, 45, 9],
+        "Fireflight": [5, 19, 22, 23, 37, 39, 15, 9],
+        "Slow Burn": [5, 8, 31, 43, 43, 45, 4, 2],
+        "The Nushura Contingency": [9, 20, 22, 33, 38, 39, 44, 17]
     }
 
     def __init__(self, numplayers):
