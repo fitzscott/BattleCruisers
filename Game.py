@@ -61,23 +61,16 @@ class Game(object):
     def getcardstoplay(self):
         cardstoplay = []
         for pbidx in range(self._numplayers):
-            if len(self.playerboards[pbidx].inplay) > 0:
-                cardstoplay.append((self.playerboards[pbidx].inplay[0].rank,
-                                    pbidx))
+            pb = self.playerboards[pbidx]
+            # skip disabled player boards
+            if pb.disabled == 2:
+                continue
+            if len(pb.inplay) > 0:
+                cardstoplay.append((pb.inplay[0].rank, pbidx))
         cardstoplay.sort()
         return(cardstoplay)
 
-    def playallcards(self):
-        """
-        Create a tuple for each playerboard's card in play,
-        put them all in a list, and sort them.
-        Then determine whether there are duplicates & evaluate
-        each card.
-        """
-
-        cardstoplay = self.getcardstoplay()
-        # print(cardstoplay)
-        # Determine duplicates, if any, in chosen cards
+    def checkfordupes(self, cardstoplay):
         carddupes = {}
         self.numclashes = 0
         for (cardrank, pbidx) in cardstoplay:
@@ -91,18 +84,47 @@ class Game(object):
                 carddupes[cardrank] = "dupe"
             else:
                 carddupes[cardrank] = "single"
+        print("Card dupes: " + str(carddupes))
+        return(carddupes)
+
+    def playallcards(self):
+        """
+        Create a tuple for each playerboard's card in play,
+        put them all in a list, and sort them.
+        Then determine whether there are duplicates & evaluate
+        each card.
+        """
+
+        cardstoplay = self.getcardstoplay()
+        # print(cardstoplay)
+        # Determine duplicates, if any, in chosen cards
+        carddupes = self.checkfordupes(cardstoplay)
+        lastcardrank = -1
         for (cardrank, pbidx) in cardstoplay:
             # It's possible that a card in play at the beginning of a
             # turn will have been discarded before it gets played.
             currboard = self.playerboards[pbidx]
             if len(currboard.inplay) > 0:
                 card = currboard.inplay[0]
-                print(currboard.player.name + " playing " + card.title)
-                if currboard.disabled == 0:
+                if currboard.disabled <= 1:
+                    print(currboard.player.name + " playing " + card.title)
                     if carddupes[cardrank] == "single":
                         card.main_effect(self, pbidx)
                     else:
                         card.clash_effect(self, pbidx)
+                elif not currboard.checkredalert():
+                    currboard.recoveryzone.append(card)
+                    currboard.inplay.remove(card)
+            # re-evaluate duplicates, as disabling or removing could
+            # change what is duplicated.
+            # Only do this if we have changed cards, though.  If we
+            # are in the middle of playing, e.g., Reckless Pilot,
+            # having player 1 discard RP does not mean that player 2's
+            # RP is no longer a duplicate.
+            if cardrank != lastcardrank:
+                newcardstoplay = self.getcardstoplay()
+                carddupes = self.checkfordupes(newcardstoplay)
+            lastcardrank = cardrank
 
     def endturn(self):
         cardstoplay = self.getcardstoplay()

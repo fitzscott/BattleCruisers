@@ -88,11 +88,12 @@ class RandomComputerPlayer(Player.Player):
 
         pbilist = []
         for pbidx in range(len(game.playerboards)):
-            if pbidx != myphbidx and \
-                    game.playerboards[pbidx].victorypoints > 0:
+            thispb = game.playerboards[pbidx]
+            if pbidx != myphbidx and thispb.victorypoints > 0 and \
+                    thispb.protected == 0:
                 pbilist.append(pbidx)
         if len(pbilist) > 0:
-            pbichoice = random.randint(0, len(pbilist))
+            pbichoice = random.randint(0, len(pbilist)-1)
             tgtpb = game.playerboards[pbilist[pbichoice]]
         else:
             tgtpb = None
@@ -113,7 +114,7 @@ class RandomComputerPlayer(Player.Player):
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
                 pickfrom = []
-                if tgtboard.protected:
+                if tgtboard.protected != 0:
                     continue
                 # it isn't strictly necessary to have a card list, as we
                 # could just sum up the sizes of decks to pick from, but
@@ -132,12 +133,12 @@ class RandomComputerPlayer(Player.Player):
             plidx = tgtpblist[chosenplidx]
         return(plidx)
 
-    def chooseplayertodisable(self, game, myphbidx, deck):
+    def chooseplayertodisable(self, game, myphbidx):
         tgtpblist = []
         plidx = -1
         for pbidx in range(len(game.playerboards)):
             pb = game.playerboards[pbidx]
-            if pbidx != myphbidx and pb.disabled == 0:
+            if pbidx != myphbidx and pb.disabled == 0 and pb.protected == 0:
                 tgtpblist.append(pbidx)
         tgtlistsize = len(tgtpblist)
         print("Disable list is " + str(tgtpblist))

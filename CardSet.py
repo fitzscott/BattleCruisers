@@ -14,6 +14,7 @@ import AttackBots
 import Captain
 import CombatTactics
 import DisruptorRay
+import Electropulse
 import EscapePod
 import LaserCannons
 import RecklessPilot
@@ -21,6 +22,8 @@ import Salvage
 import Shields
 import SpecialOps
 import SpyDrone
+import TacticalNuke
+import TargetingCPU
 
 
 class CardSet(object):
@@ -39,9 +42,12 @@ class CardSet(object):
         19: CombatTactics.CombatTactics,
         20: ArmorPlating.ArmorPlating,
         22: SpecialOps.SpecialOps,
+        23: TargetingCPU.TargetingCPU,
         29: AttackBots.AttackBots,
         31: LaserCannons.LaserCannons,
+        38: TacticalNuke.TacticalNuke,
         39: Salvage.Salvage,
+        40: Electropulse.Electropulse,
         43: EscapePod.EscapePod
     }
 
@@ -74,9 +80,17 @@ class CardSet(object):
                 keyset[idx1] = keyset[idx2]
                 keyset[idx2] = tmp
             for num in range(self._numcards):
-                # print("Creating card " + str(num) + " from set " + setname)
+                # call the constructor for each card in the set
                 card = (CardSet.cards[keyset[num]])()
                 loccardset.append(card)
+        return(loccardset)
+
+    def getcardsetbylist(self, ranklist):
+        loccardset = []
+        for rank in ranklist:
+            # call the constructor for each card in the set
+            card = (CardSet.cards[rank])()
+            loccardset.append(card)
         return(loccardset)
 
 if __name__ == '__main__':
@@ -84,6 +98,11 @@ if __name__ == '__main__':
     print("CardSet")
     cards = cs.getcardset()
     print("0th card is " + cards[0].title)
+    print("    Random set:")
     cards = cs.getcardset("Random")
+    for card in cards:
+        print(card.title + " " + str(card.rank))
+    print("    Set from list:")
+    cards = cs.getcardsetbylist([3, 11, 13, 43, 39, 38])
     for card in cards:
         print(card.title + " " + str(card.rank))

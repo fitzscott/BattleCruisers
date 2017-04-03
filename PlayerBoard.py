@@ -175,9 +175,10 @@ class PlayerBoard(object):
         recovery zone.
         """
         if card is not None:
+            print(self.player.name + " discarding " + card.title)
             # First, check if we have a redirect for discards
-            if len(self.inplay) > 0 and not \
-              self.inplay[0].redirect(self, "discard"):
+            if len(self.inplay) == 0 or len(self.inplay) > 0 and not \
+                    self.inplay[0].redirect(self, "discard"):
                 if ("hand" in piledescr) and (card in self.hand):
                     self.hand.remove(card)
                 elif ("inplay" in piledescr) and (card in self.inplay):

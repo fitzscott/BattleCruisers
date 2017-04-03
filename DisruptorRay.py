@@ -22,7 +22,8 @@ class DisruptorRay(C.Card):
 
     def main_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
-        pl = myboard.player.chooseplayertodisable(game, pbidx, None)
+        myboard.victorypoints += 2
+        pl = myboard.player.chooseplayertodisable(game, pbidx)
         print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
         if pl >= 0:
             # We are taking advantage of the end-of-round (endplay)

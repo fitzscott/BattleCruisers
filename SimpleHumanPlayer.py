@@ -88,16 +88,22 @@ class SimpleHumanPlayer(Player.Player):
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
         print(self.name + ", choose a player to take VP from:")
         pbilist = []
-        pbiidx = 0
+        optnum = 0
         print(self.name + ", other players to choose from:")
         for pbidx in range(len(game.playerboards)):
             thispb = game.playerboards[pbidx]
-            if pbidx != myphbidx and thispb.victorypoints > 0:
+            if pbidx != myphbidx and thispb.victorypoints > 0 \
+                    and thispb.protected == 0:
                 pbilist.append(pbidx)
-                print("    " + str(pbiidx) + ")  " + thispb.player.name +
+                print("    " + str(optnum) + ")  " + thispb.player.name +
                       " (VP: " + str(thispb.victorypoints) + ")")
-        chosenidx = input("!!  Choose another player by number:")
-        return(game.playerboards[pbilist[chosenidx]])
+                optnum += 1
+        if len(pbilist) > 0:
+            chosenidx = input("!!  Choose another player by number:")
+            chosenpb = game.playerboards[pbilist[chosenidx]]
+        else:
+            chosenpb = None
+        return(chosenpb)
 
     def chooseplayertotakecardfrom(self, game, myphbidx, deck):
         print(self.name + ", choose a player to take a card from:")
@@ -107,7 +113,7 @@ class SimpleHumanPlayer(Player.Player):
         for pbidx in range(len(game.playerboards)):
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
-                if not tgtboard.protected:
+                if tgtboard.protected == 0:
                     pickfrom = self.combinedecks(tgtboard, deck)
                 else:
                     pickfrom = []
@@ -125,12 +131,15 @@ class SimpleHumanPlayer(Player.Player):
 
         return(plidx)
 
-    def chooseplayertodisable(self, game, myphbidx, deck):
+    def chooseplayertodisable(self, game, myphbidx):
         tgtpblist = []
+        optnum = 0
         for pbidx in range(len(game.playerboards)):
             pb = game.playerboards[pbidx]
-            if pbidx != myphbidx and pb.disabled == 0:
+            if pbidx != myphbidx and pb.disabled == 0 and pb.protected == 0:
                 tgtpblist.append(pbidx)
+                print("    " + str(optnum) + ")  " + pb.player.name)
+                optnum += 1
         tgtlistsize = len(tgtpblist)
         print("Disable list is " + str(tgtpblist))
         if tgtlistsize > 0:
