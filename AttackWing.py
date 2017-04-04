@@ -21,7 +21,8 @@ class AttackWing(C.Card):
 
     def main_effect(self, game, pbidx):
         mypb = game.playerboards[pbidx]
-        tgtpbidx = mypb.player.chooseplayertodiscard(game, pbidx)
+        tgtpbidx = mypb.player.chooseplayertodiscard(game, pbidx,
+                                                     ["hand", "recovery"])
         if tgtpbidx is not None:
             pbo = game.playerboards[tgtpbidx]
             for disc in range(2):

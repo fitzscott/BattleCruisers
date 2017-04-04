@@ -70,8 +70,8 @@ class RandomComputerPlayer(Player.Player):
         for pbidx in range(len(game.playerboards)):
             thispb = game.playerboards[pbidx]
             if pbidx != myphbidx and thispb.victorypoints > 0 and \
-                    thispb.protected == 0 and \
-                    not pb.ignore_main_effect(game, myphbidx, ["vp_theft"]):
+                    thispb.protected == 0 and not \
+                    thispb.ignore_main_effect(game, myphbidx, ["vp_theft"]):
                 pbilist.append(pbidx)
         if len(pbilist) > 0:
             pbichoice = random.randint(0, len(pbilist)-1)
