@@ -5,6 +5,8 @@ Created on Mon Mar  6 21:11:07 2017
 @author: bushnelf
 """
 
+import random
+
 # import PlayerBoard
 # import Game
 
@@ -29,13 +31,29 @@ class Player(object):
         pickfrom = []
         if "hand" in deck:
             pickfrom.extend(tgtboard.hand)
-        elif "recovery" in deck:
+        if "recovery" in deck:
             pickfrom.extend(tgtboard.recoveryzone)
-        elif "inplay" in deck:
+        if "inplay" in deck:
             pickfrom.extend(tgtboard.inplay)
-        elif "discards" in deck:
+        if "discards" in deck:
             pickfrom.extend(tgtboard.discards)
         return(pickfrom)
+
+    def chooserandomcard(self, game, phbidx, deck):
+        """
+        Pick a card, any card
+        """
+        card = None
+        # mb = self.getmyboard(game, myphbidx)
+        mb = game.playerboards[phbidx]
+        print("Choosing card from player " + mb.player.name)
+        pickfrom = self.combinedecks(mb, deck)
+        decksize = len(pickfrom)
+        if decksize > 0:
+            cardidx = random.randint(0, decksize-1)
+            card = pickfrom[cardidx]
+            print(self.name + " picked " + card.title + " from " + str(deck))
+        return(card)
 
     def choosecardtoplay(self, game, myphbidx):
         """
@@ -58,13 +76,13 @@ class Player(object):
     def choosecardtoswap(self, game, myphbidx, deck):
         pass
 
-    def choosecardtotake(self, game, myphbidx):
-        pass
-
-    def choosecardtotrade(self, game, myphbidx):
+    def choosecardtotrade(self, game, myphbidx, deck):
         pass
 
     def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+        pass
+
+    def randomcardfromplayer(self, game, myphbidx, deck, tgtpbidx):
         pass
 
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
@@ -76,5 +94,8 @@ class Player(object):
     def chooseplayertotakecardfrom(self, game, myphbidx, deck):
         pass
 
-    def chooseeffecttoignore(self, game, myphbidx):
+    def chooseplayertodiscard(self, game, myphbidx, deck):
+        pass
+
+    def chooseeffecttoignore(self, game, myphbidx, card):
         pass

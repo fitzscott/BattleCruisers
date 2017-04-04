@@ -29,6 +29,7 @@ class Game(object):
         for pbidx in range(numplayers):
             pb = PlayerBoard.PlayerBoard("Player " + str(pbidx + 1))
             self._playerboards.append(pb)
+        self._cardbeingplayed = None
 
     @property
     def playerboards(self):
@@ -49,6 +50,14 @@ class Game(object):
     @numclashes.setter
     def numclashes(self, val):
         self._numclashes = val
+
+    @property
+    def cardbeingplayed(self):
+        return(self._cardbeingplayed)
+
+    @cardbeingplayed.setter
+    def cardbeingplayed(self, val):
+        self._cardbeingplayed = val
 
     def addtocardlist(self, card):
         self._cardlist.append(card)
@@ -113,6 +122,7 @@ class Game(object):
                     # is gone, do not play it.
                     if cardrank not in carddupes:
                         continue
+                    self.cardbeingplayed = card
                     if carddupes[cardrank] == "single":
                         card.main_effect(self, pbidx)
                     else:

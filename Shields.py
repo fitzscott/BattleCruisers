@@ -37,6 +37,10 @@ class Shields(Card.Card):
             myboard.discard(self, ["inplay"])
             print("Discarding last card " + self.title)
 
+    def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):
+        """ Shields ignore main effects for 2 rounds - this + last """
+        return(True)
+
 if __name__ == '__main__':
     import Game
 

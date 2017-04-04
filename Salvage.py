@@ -27,31 +27,34 @@ class Salvage(C.Card):
         pl = myboard.player.chooseplayertotakecardfrom(game, pbidx,
                                                        ["discards"])
         print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
-        if pl >= 0:
+        if pl is not None:
             targetpb = game.playerboards[pl]
             print("Chosen RZ: " + targetpb.printrecover())
-            card = myboard.player.choosecardfromplayer(game, pbidx,
-                                                       ["recovery"], pl)
+            card = myboard.player.randomcardfromplayer(game, pbidx,
+                                                       ["discards"], pl)
             if card is not None:
-                print("Chose card: " + card.title + ", rank: " +
+                print("Got random card: " + card.title + ", rank: " +
                       str(card.rank))
                 # player chooser should not choose a protected opponent,
                 # but if it does, disallow the effect.
                 if targetpb.protected == 0:
                     myboard.hand.append(card)
-                    targetpb.recoveryzone.remove(card)
+                    targetpb.discards.remove(card)
                 else:
                     print("Cannot steal a card from a protected player")
+        else:
+            print("No target for " + self.title)
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]
         # Must destroy 2 cards from discards
         for todel in range(2):
-            rzcard = myboard.player.choosecardtodiscard(game, pbidx,
-                                                        ["discards"])
-            if rzcard is not None:
-                print(myboard.player.name + " discarding " + rzcard.title)
-                myboard.discard(rzcard, ["discards"])
+            myboard.removerandomcardfromgame(game, pbidx, ["discards"])
+#            rzcard = myboard.player.choosecardtodiscard(game, pbidx,
+#                                                        ["discards"])
+#            if rzcard is not None:
+#                print(myboard.player.name + " discarding " + rzcard.title)
+#                myboard.discard(rzcard, ["discards"])
 
 if __name__ == '__main__':
     s = Salvage()

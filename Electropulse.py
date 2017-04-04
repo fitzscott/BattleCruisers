@@ -26,8 +26,8 @@ class Electropulse(C.Card):
         mypb = game.playerboards[pbidx]
         mypb.victorypoints += 2
         plidx = mypb.player.chooseplayertodisable(game, pbidx)
-        print("Chose player " + str(plidx) + " (I am " + str(pbidx) + ")")
-        if plidx >= 0:
+        if plidx is not None:
+            print("Chose player " + str(plidx) + " (I am " + str(pbidx) + ")")
             # This effect will apply next turn, so the disable count
             # must be at 2 then, so it needs to be 3 now.
             game.playerboards[plidx].disabled = 3

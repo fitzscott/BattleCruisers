@@ -5,6 +5,8 @@ Created on Sun Jan 22 21:48:40 2017
 @author: bushnelf
 """
 
+import random
+
 # import Player
 
 
@@ -115,7 +117,14 @@ class PlayerBoard(object):
             if self.lastroundcard is not None:
                 defense = \
                     self.lastroundcard.defense(game, pbidx, effect, "last")
+        print("Player " + self.player.name + " defense is " + str(defense))
         return(defense)
+
+    def ignore_main_effect(self, game, attkpbidx, addl_fx):
+        fx = ["main_effect"]
+        if addl_fx is not None:
+            fx.extend(addl_fx)
+        return(self.defense(game, attkpbidx, fx))
 
     def readytoplay(self, card):
         """ Move a card from your hand to the "in play" area.
@@ -241,6 +250,26 @@ class PlayerBoard(object):
         if card is not None:
             self.hand.append(card)
             self.discards.remove(card)
+
+    def removerandomcardfromgame(self, game, pbidx, deck):
+        """
+        Remove the specified card from the specified deck and do
+        not place it anywhere else.
+        """
+        # Might re-work this later to allow multiple entries in deck.
+        # Not clear it's needed.
+        if "hand" in deck:
+            pickfrom = self.hand
+        elif "recovery" in deck:
+            pickfrom = self.recoveryzone
+        elif "inplay" in deck:
+            pickfrom = self.inplay
+        elif "discards" in deck:
+            pickfrom = self.discards
+        rng = len(pickfrom)
+        if rng > 0:
+            remvidx = random.randint(0, rng-1)
+            del pickfrom[remvidx]
 
     def cardbyindex(self, cardidx, deck="hand"):
         card = None

@@ -70,6 +70,7 @@ class Card(object):
                 vp_theft: Stealing your victory points
                 card_discard: Forcing a card to be discarded
                 card_theft: Stealing your card
+                disable: Disabling player board
             Can have combinations of effects, e.g. stealing victory
                 points as a main effect, as some defenses only apply
                 against, e.g. VP theft as a main effect, rather than

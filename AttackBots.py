@@ -23,9 +23,9 @@ class AttackBots(Card.Card):
         myboard = game.playerboards[pbidx]
         pl = myboard.player.chooseplayertotakecardfrom(game, pbidx,
                                                        ["recovery"])
-        print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
-        print("My RZ: " + myboard.printrecover())
-        if pl >= 0:
+        if pl is not None:
+            print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
+            print("My RZ: " + myboard.printrecover())
             targetpb = game.playerboards[pl]
             print("Chosen RZ: " + targetpb.printrecover())
             card = myboard.player.choosecardfromplayer(game, pbidx,
@@ -43,7 +43,7 @@ class AttackBots(Card.Card):
             else:
                 print("How'd we get no cards?")
         else:
-            print("No choices among recovery zones")
+            print("No target for " + self.title)
 
     def clash_effect(self, game, pbidx):
         myboard = game.playerboards[pbidx]

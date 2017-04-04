@@ -11,12 +11,15 @@ import random
 import Ambassador
 import ArmorPlating
 import AttackBots
+import AttackWing
 import Captain
 import CombatTactics
+import ComputerVirus
 import DisruptorRay
 import Electropulse
 import EscapePod
 import LaserCannons
+import Navigator
 import RecklessPilot
 import Salvage
 import Shields
@@ -35,6 +38,7 @@ class CardSet(object):
     cards = {
         1:  SpyDrone.SpyDrone,
         3:  Shields.Shields,
+        5:  Navigator.Navigator,
         9:  DisruptorRay.DisruptorRay,
         11: RecklessPilot.RecklessPilot,
         13: Captain.Captain,
@@ -44,7 +48,9 @@ class CardSet(object):
         22: SpecialOps.SpecialOps,
         23: TargetingCPU.TargetingCPU,
         29: AttackBots.AttackBots,
+        30: ComputerVirus.ComputerVirus,
         31: LaserCannons.LaserCannons,
+        33: AttackWing.AttackWing,
         38: TacticalNuke.TacticalNuke,
         39: Salvage.Salvage,
         40: Electropulse.Electropulse,

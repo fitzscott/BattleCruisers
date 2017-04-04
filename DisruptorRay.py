@@ -24,8 +24,8 @@ class DisruptorRay(C.Card):
         myboard = game.playerboards[pbidx]
         myboard.victorypoints += 2
         pl = myboard.player.chooseplayertodisable(game, pbidx)
-        print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
-        if pl >= 0:
+        if pl is not None:
+            print("Chose player " + str(pl) + " (I am " + str(pbidx) + ")")
             # We are taking advantage of the end-of-round (endplay)
             # function in playerboard to clean up on the disabled counter.
             # A disabled player board may not be disabled the next
@@ -33,6 +33,8 @@ class DisruptorRay(C.Card):
             # In this case, 2 = this round & next for being immune to
             # being disabled.
             game.playerboards[pl].disabled = 2
+        else:
+            print("No target for " + self.title)
 
     def clash_effect(self, game, pbidx):
         """

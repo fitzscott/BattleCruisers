@@ -23,22 +23,6 @@ class RandomComputerPlayer(Player.Player):
     def getmyboard(self, game, myphbidx):
         return game.playerboards[myphbidx]
 
-    def chooserandomcard(self, game, phbidx, deck):
-        """
-        Pick a card, any card
-        """
-        card = None
-        # mb = self.getmyboard(game, myphbidx)
-        mb = game.playerboards[phbidx]
-        print("Choosing card from player " + mb.player.name)
-        pickfrom = self.combinedecks(mb, deck)
-        decksize = len(pickfrom)
-        if decksize > 0:
-            cardidx = random.randint(0, decksize-1)
-            card = pickfrom[cardidx]
-            print(self.name + " picked " + card.title + " from " + str(deck))
-        return(card)
-
     def choosecardtoplay(self, game, myphbidx):
         return(self.chooserandomcard(game, myphbidx, ["hand"]))
 
@@ -72,11 +56,7 @@ class RandomComputerPlayer(Player.Player):
                 swapcard = None
         return(swapcard)
 
-    def choosecardtotake(self, game, myphbidx):
-        """ Which card needs this?  """
-        pass
-
-    def choosecardtotrade(self, game, myphbidx):
+    def choosecardtotrade(self, game, myphbidxdeck):
         """ Which card needs this?  """
         pass
 
@@ -90,7 +70,8 @@ class RandomComputerPlayer(Player.Player):
         for pbidx in range(len(game.playerboards)):
             thispb = game.playerboards[pbidx]
             if pbidx != myphbidx and thispb.victorypoints > 0 and \
-                    thispb.protected == 0:
+                    thispb.protected == 0 and \
+                    not pb.ignore_main_effect(game, myphbidx, ["vp_theft"]):
                 pbilist.append(pbidx)
         if len(pbilist) > 0:
             pbichoice = random.randint(0, len(pbilist)-1)
@@ -98,6 +79,9 @@ class RandomComputerPlayer(Player.Player):
         else:
             tgtpb = None
         return(tgtpb)
+
+    def randomcardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+        return(self.chooserandomcard(game, tgtpbidx, deck))
 
     def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
         # Note that this uses the target player index
@@ -109,12 +93,14 @@ class RandomComputerPlayer(Player.Player):
         have cards in appropriate deck.
         """
         tgtpblist = []
-        plidx = -1
+        plidx = None
         for pbidx in range(len(game.playerboards)):
             if pbidx != myphbidx:
                 tgtboard = game.playerboards[pbidx]
                 pickfrom = []
-                if tgtboard.protected != 0:
+                if tgtboard.protected != 0 or \
+                        tgtboard.ignore_main_effect(game, myphbidx,
+                                                    ["card_theft"]):
                     continue
                 # it isn't strictly necessary to have a card list, as we
                 # could just sum up the sizes of decks to pick from, but
@@ -135,10 +121,12 @@ class RandomComputerPlayer(Player.Player):
 
     def chooseplayertodisable(self, game, myphbidx):
         tgtpblist = []
-        plidx = -1
+        plidx = None
         for pbidx in range(len(game.playerboards)):
             pb = game.playerboards[pbidx]
-            if pbidx != myphbidx and pb.disabled == 0 and pb.protected == 0:
+            if pbidx != myphbidx and pb.disabled == 0 and \
+                    pb.protected == 0 and \
+                    not pb.ignore_main_effect(game, myphbidx, ["disable"]):
                 tgtpblist.append(pbidx)
         tgtlistsize = len(tgtpblist)
         print("Disable list is " + str(tgtpblist))
@@ -147,8 +135,36 @@ class RandomComputerPlayer(Player.Player):
             plidx = tgtpblist[chosenplidx]
         return(plidx)
 
-    def chooseeffecttoignore(self, game, myphbidx):
-        pass
+    def chooseplayertodiscard(self, game, myphbidx, deck):
+        tgtpblist = []
+        plidx = None
+        for pbidx in range(len(game.playerboards)):
+            pb = game.playerboards[pbidx]
+            if pbidx != myphbidx and pb.disabled == 0 and \
+                    pb.protected == 0 and not \
+                    pb.ignore_main_effect(game, myphbidx, ["discard"]):
+                tgtpblist.append(pbidx)
+        tgtlistsize = len(tgtpblist)
+        print("Discard list is " + str(tgtpblist))
+        if tgtlistsize > 0:
+            chosenplidx = random.randint(0, tgtlistsize-1)
+            plidx = tgtpblist[chosenplidx]
+        return(plidx)
+
+    def chooseeffecttoignore(self, game, myphbidx, card):
+        tgtpblist = []
+        fxrank = -1
+        for pbidx in range(len(game.playerboards)):
+            pb = game.playerboards[pbidx]
+            if pbidx != myphbidx:
+                if len(pb.inplay) > 0 and card.rank < pb.inplay[0].rank:
+                    tgtpblist.append(pbidx)
+        tgtlistsize = len(tgtpblist)
+        print("Effects list is " + str(tgtpblist))
+        if tgtlistsize > 0:
+            chosenplidx = random.randint(0, tgtlistsize-1)
+            fxrank = tgtpblist[chosenplidx]
+        return(fxrank)
 
 if __name__ == '__main__':
     import Game

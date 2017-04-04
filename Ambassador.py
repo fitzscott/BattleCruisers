@@ -22,7 +22,7 @@ class Ambassador(Card.Card):
         self._nuke = 0
 
     def main_effect(self, game, pbidx):
-        print("Running card " + self.title + "'s main effect")
+        # print("Running card " + self.title + "'s main effect")
         # gain 1 VP
         myboard = game.playerboards[pbidx]
         myboard.victorypoints += 1
