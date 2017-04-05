@@ -150,7 +150,7 @@ class RandomComputerPlayer(Player.Player):
             pb = game.playerboards[pbidx]
             if pbidx != myphbidx and pb.disabled == 0 and \
                     pb.protected == 0 and not \
-                    pb.ignore_main_effect(game, myphbidx, ["discard"]):
+                    pb.ignore_main_effect(game, myphbidx, ["card_discard"]):
                 tgtpblist.append(pbidx)
         tgtlistsize = len(tgtpblist)
         print("Discard list is " + str(tgtpblist))

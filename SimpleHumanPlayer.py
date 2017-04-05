@@ -179,7 +179,7 @@ class SimpleHumanPlayer(Player.Player):
                 tgtboard = game.playerboards[pbidx]
                 if tgtboard.protected == 0 and not \
                         tgtboard.ignore_main_effect(game, myphbidx,
-                                                    ["discard"]):
+                                                    ["card_discard"]):
                     pickfrom = self.combinedecks(tgtboard, deck)
                 else:
                     pickfrom = []

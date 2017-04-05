@@ -14,11 +14,14 @@ import AttackBots
 import AttackWing
 import Bureaucrat
 import Captain
+import CloakingDevice
 import CombatTactics
 import ComputerVirus
+import Decoy
 import DisruptorRay
 import Electropulse
 import EscapePod
+import EvasiveAction
 import HeavyAssault
 import LaserCannons
 import Navigator
@@ -27,6 +30,7 @@ import PirateRaid
 import RecklessPilot
 import RepairCrew
 import Salvage
+import SecurityChief
 import Shields
 import SpecialOps
 import SpyDrone
@@ -44,7 +48,11 @@ class CardSet(object):
     cards = {
         1:  SpyDrone.SpyDrone,
         3:  Shields.Shields,
+        4:  CloakingDevice.CloakingDevice,
         5:  Navigator.Navigator,
+        6:  Decoy.Decoy,
+        7:  SecurityChief.SecurityChief,
+        8:  EvasiveAction.EvasiveAction,
         9:  DisruptorRay.DisruptorRay,
         11: RecklessPilot.RecklessPilot,
         12: Negotiator.Negotiator,
