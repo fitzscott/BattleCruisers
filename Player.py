@@ -76,10 +76,16 @@ class Player(object):
     def choosecardtoswap(self, game, myphbidx, deck):
         pass
 
+    def choosecardtogiveaway(self, game, myphbidx, deck):
+        pass
+
     def choosecardtotrade(self, game, myphbidx, deck):
         pass
 
     def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
+        pass
+
+    def choosecardbyname(self, game, myphbidx):
         pass
 
     def randomcardfromplayer(self, game, myphbidx, deck, tgtpbidx):

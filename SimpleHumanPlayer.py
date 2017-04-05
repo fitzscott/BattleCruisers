@@ -75,6 +75,10 @@ class SimpleHumanPlayer(Player.Player):
         print(self.name + ", choose cards to swap:")
         return(self.choosecard(game, myphbidx, deck))
 
+    def choosecardtogiveaway(self, game, myphbidx, deck):
+        print("..... " + self.name + " choosing card to give away")
+        return(self.choosecard(game, myphbidx, deck))
+
     def choosecardtotake(self, game, myphbidx):
         pass
 
@@ -84,6 +88,14 @@ class SimpleHumanPlayer(Player.Player):
     def choosecardfromplayer(self, game, myphbidx, deck, tgtpbidx):
         # Pass in the target player's board instead of our own.
         return(self.choosecard(game, tgtpbidx, deck))
+
+    def choosecardbyname(self, game, myphbidx):
+        optnum = 0
+        for card in game.cardlist:
+            print(str(optnum) + ") " + card.title + ", rank " + str(card.rank))
+            optnum += 1
+        cidx = input("!!  Choose a card by option number:")
+        return(game.cardlist[cidx])
 
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
         print(self.name + ", choose a player to take VP from:")

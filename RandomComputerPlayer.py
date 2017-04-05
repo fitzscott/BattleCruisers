@@ -56,9 +56,17 @@ class RandomComputerPlayer(Player.Player):
                 swapcard = None
         return(swapcard)
 
+    def choosecardtogiveaway(self, game, myphbidx, deck):
+        print("..... " + self.name + " choosing card to give away")
+        return(self.chooserandomcard(game, myphbidx, ["hand"]))
+
     def choosecardtotrade(self, game, myphbidxdeck):
         """ Which card needs this?  """
         pass
+
+    def choosecardbyname(self, game, myphbidx):
+        cidx = random.randint(0, len(game.cardlist)-1)
+        return(game.cardlist[cidx])
 
     def chooseplayertotakevictoryfrom(self, game, myphbidx):
         """

@@ -12,21 +12,27 @@ import Ambassador
 import ArmorPlating
 import AttackBots
 import AttackWing
+import Bureaucrat
 import Captain
 import CombatTactics
 import ComputerVirus
 import DisruptorRay
 import Electropulse
 import EscapePod
+import HeavyAssault
 import LaserCannons
 import Navigator
+import Negotiator
+import PirateRaid
 import RecklessPilot
+import RepairCrew
 import Salvage
 import Shields
 import SpecialOps
 import SpyDrone
 import TacticalNuke
 import TargetingCPU
+import TimeWarp
 
 
 class CardSet(object):
@@ -41,20 +47,26 @@ class CardSet(object):
         5:  Navigator.Navigator,
         9:  DisruptorRay.DisruptorRay,
         11: RecklessPilot.RecklessPilot,
+        12: Negotiator.Negotiator,
         13: Captain.Captain,
+        16: RepairCrew.RepairCrew,
         17: Ambassador.Ambassador,
         19: CombatTactics.CombatTactics,
         20: ArmorPlating.ArmorPlating,
         22: SpecialOps.SpecialOps,
         23: TargetingCPU.TargetingCPU,
+        24: HeavyAssault.HeavyAssault,
         29: AttackBots.AttackBots,
         30: ComputerVirus.ComputerVirus,
         31: LaserCannons.LaserCannons,
+        32: PirateRaid.PirateRaid,
         33: AttackWing.AttackWing,
         38: TacticalNuke.TacticalNuke,
         39: Salvage.Salvage,
         40: Electropulse.Electropulse,
-        43: EscapePod.EscapePod
+        43: EscapePod.EscapePod,
+        44: Bureaucrat.Bureaucrat,
+        45: TimeWarp.TimeWarp
     }
 
     cardsets = {
