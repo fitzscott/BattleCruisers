@@ -28,11 +28,10 @@ class EvasiveAction(C.Card):
             if C.Card.Symbols[5] in card.symbols:
                 mypb.victorypoints += 2
                 break        # but only once
-            
+
     def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):
         """ prevents discards for this round and next round """
         return("card_discard" in effect)
 
 if __name__ == '__main__':
     d = EvasiveAction()
-

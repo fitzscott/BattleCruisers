@@ -27,6 +27,7 @@ import LaserCannons
 import Navigator
 import Negotiator
 import PirateRaid
+import PrecisionStrike
 import RecklessPilot
 import RepairCrew
 import Salvage
@@ -34,6 +35,7 @@ import SecurityChief
 import Shields
 import SpecialOps
 import SpyDrone
+import SupplyConvoy
 import TacticalNuke
 import TargetingCPU
 import TimeWarp
@@ -69,6 +71,8 @@ class CardSet(object):
         31: LaserCannons.LaserCannons,
         32: PirateRaid.PirateRaid,
         33: AttackWing.AttackWing,
+        34: PrecisionStrike.PrecisionStrike,
+        37: SupplyConvoy.SupplyConvoy,
         38: TacticalNuke.TacticalNuke,
         39: Salvage.Salvage,
         40: Electropulse.Electropulse,

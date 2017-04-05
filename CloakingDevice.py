@@ -37,7 +37,7 @@ class CloakingDevice(C.Card):
                     card = pbo.player.choosecardtodiscard(game, tgtpbidx,
                                                           ["hand", "recovery"])
                     pbo.discard(card, ["hand", "recovery"])
-            
+
     def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):
         if thisorlast == "this":
             mypb = game.playerboards[pbidx]
@@ -47,4 +47,3 @@ class CloakingDevice(C.Card):
 
 if __name__ == '__main__':
     c = CloakingDevice()
-

@@ -31,6 +31,7 @@ class PlayerBoard(object):
         self._victorypoints = 1    # everyone starts with 1
         self._player = None
         self._last_round_card = None
+        self._vp_lost_this_round = 0
 
     @property
     def inplay(self):
@@ -50,6 +51,10 @@ class PlayerBoard(object):
     @property
     def hand(self):
         return self._hand
+
+    @hand.setter
+    def hand(self, val):
+        self._hand = val
 
     @property
     def redalert(self):
@@ -83,6 +88,8 @@ class PlayerBoard(object):
     def victorypoints(self, val):
         if val < 0:
             val = 0
+        if val < self._victorypoints:
+            self.vp_lost_this_round += self._victorypoints - val
         self._victorypoints = val
 
     @property
@@ -103,6 +110,14 @@ class PlayerBoard(object):
     @lastroundcard.setter
     def lastroundcard(self, val):
         self._last_round_card = val
+
+    @property
+    def vp_lost_this_round(self):
+        return self._vp_lost_this_round
+
+    @vp_lost_this_round.setter
+    def vp_lost_this_round(self, val):
+        self._vp_lost_this_round = val
 
     def defense(self, game, pbidx, effect):
         """
@@ -163,6 +178,7 @@ class PlayerBoard(object):
                 self.inplay.remove(card)
         self.protected -= 1
         self.disabled -= 1
+        self.vp_lost_this_round = 0
 
     def recover(self):
         """ Move the card(s) from the recovery zone to the
