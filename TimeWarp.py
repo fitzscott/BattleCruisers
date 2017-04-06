@@ -27,4 +27,4 @@ class TimeWarp(C.Card):
         for card in pb.discards:
             pb.hand.append(card)
             pb.discards.remove(card)
-        pb.discard(self, "inplay")
+        pb.discard(self, ["inplay"])
