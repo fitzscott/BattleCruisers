@@ -198,7 +198,11 @@ class PlayerBoard(object):
         recovery zone.
         """
         if card is not None:
-            print(self.player.name + " discarding " + card.title)
+            if self.player is None:
+                plynm = "Nohbody"
+            else:
+                plynm = self.player.name
+            print(plynm + " discarding " + card.title)
             # First, check if we have a redirect for discards
             if len(self.inplay) == 0 or len(self.inplay) > 0 and not \
                     self.inplay[0].redirect(self, "discard"):
@@ -309,35 +313,65 @@ class PlayerBoard(object):
             tot += card.rank
         return(tot)
 
-    def printinplay(self):
-        retstr = "    ----  In play:\n"
-        for card in self.inplay:
-            retstr += card.title + ": " + str(card.rank) + "\n"
+#    def printinplay(self):
+#        retstr = "    ----  In play:\n"
+#        for card in self.inplay:
+#            retstr += card.title + ": " + str(card.rank) + "\n"
+#        return(retstr)
+#
+#    def printhand(self):
+#        retstr = "    ----  Hand:\n"
+#        for card in self.hand:
+#            retstr += card.title + ": " + str(card.rank) + "\n"
+#        return(retstr)
+#
+#    def printrecover(self):
+#        retstr = "    ----  Recovery Zone:\n"
+#        if self.checkredalert():
+#            retstr += "    [same as in play]\n"
+#            # remove this later
+#            for card in self._recovery:
+#                retstr += card.title.upper() + ", " + str(card.rank) + "\n"
+#        else:
+#            for card in self.recoveryzone:
+#                retstr += card.title + ": " + str(card.rank) + "\n"
+#        return(retstr)
+#
+#    def printdiscards(self):
+#        retstr = "    ----  Discards:\n"
+#        for card in self.discards:
+#            retstr += card.title + ": " + str(card.rank) + "\n"
+#        return(retstr)
+
+    def shortprint(self, deck):
+        if deck == "hand":
+            deckstr = "H"
+            cardlist = self.hand
+        elif deck == "recovery":
+            deckstr = "RZ"
+            cardlist = self.recoveryzone
+        elif deck == "inplay":
+            deckstr = "IP"
+            cardlist = self.inplay
+        elif deck == "discards":
+            deckstr = "D"
+            cardlist = self.discards
+        retstr = deckstr + ": "
+        for card in cardlist:
+            retstr += str(card.rank) + " "
         return(retstr)
+
+    def printinplay(self):
+        return(self.shortprint("inplay"))
 
     def printhand(self):
-        retstr = "    ----  Hand:\n"
-        for card in self.hand:
-            retstr += card.title + ": " + str(card.rank) + "\n"
-        return(retstr)
+        return(self.shortprint("hand"))
 
     def printrecover(self):
-        retstr = "    ----  Recovery Zone:\n"
-        if self.checkredalert():
-            retstr += "    [same as in play]\n"
-            # remove this later
-            for card in self._recovery:
-                retstr += card.title.upper() + ", " + str(card.rank) + "\n"
-        else:
-            for card in self.recoveryzone:
-                retstr += card.title + ": " + str(card.rank) + "\n"
-        return(retstr)
+        return(self.shortprint("recovery"))
 
     def printdiscards(self):
-        retstr = "    ----  Discards:\n"
-        for card in self.discards:
-            retstr += card.title + ": " + str(card.rank) + "\n"
-        return(retstr)
+        return(self.shortprint("discards"))
 
     def __str__(self):
         if self.checkredalert():
