@@ -12,7 +12,7 @@ class Decoy(C.Card):
     """
     Decoy:
     Gain 1VP per Technology symbol in play + RZs.
-        If you have the single most cards in your discard pile, ignore 
+        If you have the single most cards in your discard pile, ignore
         oppenents' main effects this round.
     No Clash effect
     """
@@ -39,7 +39,7 @@ class Decoy(C.Card):
             if pbidx != pballi and maxdiscs < len(pb.discards):
                 maxdiscs = len(pb.discards)
             self._ignore_main_effect = maxdiscs < len(mypb.discards)
-            
+
     def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):
         if thisorlast == "this":
             return(self._ignore_main_effect)

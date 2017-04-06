@@ -27,6 +27,10 @@ class PirateRaid(C.Card):
         for pboi in range(len(game.playerboards)):
             if pboi != pbidx:
                 pbo = game.playerboards[pboi]
+                # This applies to all opponents, but they may have a defense
+                if pbo.protected != 0 or \
+                        pbo.ignore_main_effect(game, pboi, ["card_theft"]):
+                    continue
                 card = pbo.player.choosecardtogiveaway(game, pboi, ["hand"])
                 if card is not None:
                     mypb.hand.append(card)

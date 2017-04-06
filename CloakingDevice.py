@@ -18,7 +18,7 @@ class CloakingDevice(C.Card):
     """
 
     def __init__(self):
-        C.Card.__init__(self, "CloakingDevice", 5)
+        C.Card.__init__(self, "Cloaking Device", 4)
         self.add_symbol(C.Card.Symbols[3])      # Technology
         self.add_symbol(C.Card.Symbols[0])      # Negation
 
