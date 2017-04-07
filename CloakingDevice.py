@@ -39,11 +39,46 @@ class CloakingDevice(C.Card):
                     pbo.discard(card, ["hand", "recovery"])
 
     def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):
+        # print("Checking defense in " + self.title + " vs. " + str(effect))
         if thisorlast == "this":
-            mypb = game.playerboards[pbidx]
-            return(len(mypb.hand) <= 2)
+            # print("   Checking for this round (not last)")
+            if "main_effect" in effect:
+                mypb = game.playerboards[pbidx]
+                # print("        Player index " + str(pbidx) + ", hand: " +
+                #      str(mypb.printhand()))
+                return(len(mypb.hand) <= 2)
+            else:
+                return(False)
         else:
             return(False)
 
 if __name__ == '__main__':
-    c = CloakingDevice()
+    import HeavyAssault as HA
+    import Game
+    import RandomComputerPlayer as RCP
+
+    g = Game.Game(3)
+    for rcpi in range(3):
+        rcp = RCP.RandomComputerPlayer("Random Player " + str(rcpi+1))
+        g.playerboards[rcpi].player = rcp
+
+    cd = CloakingDevice()
+    ha = HA.HeavyAssault()
+    g.addtocardlist(cd)
+    g.addtocardlist(ha)
+    c = C.Card("No-op card 0", 88)
+    g.addtocardlist(c)
+    g.sendcardlisttoboards()
+
+    pb0 = g.playerboards[0]
+    pb0.readytoplay(cd)
+    pb1 = g.playerboards[1]
+    pb1.readytoplay(ha)
+
+    print("Before playing " + cd.title + " vs. " + ha.title)
+    print(pb0)
+    g.playallcards()
+    print("After " + cd.title + " vs. " + ha.title)
+    print("    (should still have 1 VP)")
+    print(pb0)
+    assert(pb0.victorypoints == 1)
