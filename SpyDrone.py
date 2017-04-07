@@ -51,13 +51,18 @@ class SpyDrone(Card.Card):
 
 if __name__ == '__main__':
     import Game
+    import RandomComputerPlayer as RCP
 
     sd = SpyDrone()
     print("Created card " + sd.title)
+    c = Card.Card("Swap Me", 99)
     g = Game.Game(1)
-    # Need to figure out how to get the cards listed on the player
-    # board to register in our tests.
-    # g.addtocardlist(sd)
-    # g.sendcardlisttoboards()
-    sd.main_effect(g, 0)
-    sd.end_of_turn_effect(g, 0)
+    rcp = RCP.RandomComputerPlayer("RCP 1")
+    g.playerboards[0].player = rcp
+    g.addtocardlist(sd)
+    g.addtocardlist(c)
+    g.sendcardlisttoboards()
+    g.playerboards[0].readytoplay(sd)
+    g.playallcards()
+    # sd.main_effect(g, 0)
+    # sd.end_of_turn_effect(g, 0)

@@ -132,7 +132,11 @@ class PlayerBoard(object):
             if self.lastroundcard is not None:
                 defense = \
                     self.lastroundcard.defense(game, pbidx, effect, "last")
-        print("Player " + self.player.name + " defense is " + str(defense))
+        if self.player is not None:
+            plnm = self.player.name 
+        else:
+            plnm = "Nohbody"
+        print("Player " + plnm + " defense is " + str(defense))
         return(defense)
 
     def ignore_main_effect(self, game, attkpbidx, addl_fx):
@@ -159,7 +163,11 @@ class PlayerBoard(object):
         going directly to the player's hand.
         """
         if self.checklost():
-            print("Player " + self.player.name + " lost!")
+            if self.player is None:
+                plnm = "Nohbody"
+            else:
+                plnm = self.player.name 
+            print("Player " + plnm + " lost!")
             self.victorypoints = 0
         elif self.checkredalert():
             if len(self._hand) == 0:

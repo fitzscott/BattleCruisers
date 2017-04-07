@@ -116,7 +116,11 @@ class Game(object):
             if len(currboard.inplay) > 0:
                 card = currboard.inplay[0]
                 if currboard.disabled != 2:    # 2 => disabled this round
-                    print(currboard.player.name + " playing " + card.title)
+                    if currboard.player is not None:
+                        plnm = currboard.player.name
+                    else:
+                        plnm = "Nohbody"
+                    print(plnm + " playing " + card.title)
                     # cards might have been pulled out of the duplicate list
                     # in the checkfordupes at the end of the loop.  If one
                     # is gone, do not play it.
