@@ -35,6 +35,7 @@ class PrecisionStrike(C.Card):
                     foundthiscard = True
             if len(tgthand) == 0 and foundthiscard:   # only precision strike
                 card = pb.player.choosecardtodiscard(game, tgtpl, ["hand"])
+                tgtpb.discard(card, ["hand"])
             elif len(tgthand) > 0:
                 # Switch out real hand, restore later
                 orighand = tgtpb.hand
