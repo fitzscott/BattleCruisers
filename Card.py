@@ -88,6 +88,9 @@ class Card(object):
         """
         return False
 
+    def __str__(self):
+        return(self.title + " (" + str(self.rank) + ")")
+
 if __name__ == '__main__':
     c = Card("Spy Drone", 1)
     c.add_symbol("Technology")

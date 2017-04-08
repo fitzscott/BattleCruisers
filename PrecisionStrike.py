@@ -69,6 +69,18 @@ if __name__ == '__main__':
     print("Before playing " + ps.title + ":")
     print(g.playerboards[0])
     g.playallcards()
-    print("Two copies of " + ps.title + " should be in discards:")
+    print("Two copies of " + ps.title + " (" + str(ps.rank) +
+          ") should be in discards:")
     for pbi in range(3):
         print(g.playerboards[pbi])
+    g.endturn()
+
+    g.playerboards[2].readytoplay(ps)
+    for pbi in range(2):
+        g.playerboards[pbi].readytoplay(c)
+    print("Random player 3 should force a discard in player 1 or 2")
+    g.playallcards()
+    print("    Chosen target player should have 1 fewer cards in hand.")
+    for pbi in range(3):
+        print(g.playerboards[pbi])
+    g.endturn()
