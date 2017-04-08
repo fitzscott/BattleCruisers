@@ -17,7 +17,7 @@ class EvasiveAction(C.Card):
     """
 
     def __init__(self):
-        C.Card.__init__(self, "EvasiveAction", 8)
+        C.Card.__init__(self, "Evasive Action", 8)
         self.add_symbol(C.Card.Symbols[5])      # Space
         self.add_symbol(C.Card.Symbols[0])      # Negation
 

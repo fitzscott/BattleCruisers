@@ -41,7 +41,7 @@ class PrecisionStrike(C.Card):
                 tgtpb.hand = tgthand
                 card = pb.player.choosecardtodiscard(game, tgtpl, ["hand"])
                 tgtpb.hand = orighand
-                pb.discard(card, ["hand"])
+                tgtpb.discard(card, ["hand"])
 
     def clash_effect(self, game, pbidx):
         game.playerboards[pbidx].discard(self, ["inplay"])
