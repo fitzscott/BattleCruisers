@@ -121,6 +121,18 @@ class Game(object):
                     else:
                         plnm = "Nohbody"
                     print(plnm + " playing " + card.title)
+                    # re-evaluate duplicates, as disabling or removing could
+                    # change what is duplicated.
+                    # Only do this if we have changed cards, though.  If we
+                    # are in the middle of playing, e.g., Reckless Pilot,
+                    # having player 1 discard RP does not mean that player 2's
+                    # RP is no longer a duplicate.
+                    if cardrank != lastcardrank and lastcardrank != -1:
+                        print("    end of turn comparing card ranks " +
+                              str(cardrank) + " vs. " + str(lastcardrank))
+                        newcardstoplay = self.getcardstoplay()
+                        carddupes = self.checkfordupes(newcardstoplay)
+                    lastcardrank = cardrank
                     # cards might have been pulled out of the duplicate list
                     # in the checkfordupes at the end of the loop.  If one
                     # is gone, do not play it.
@@ -135,18 +147,6 @@ class Game(object):
                 elif not currboard.checkredalert():
                     currboard.recoveryzone.append(card)
                     currboard.inplay.remove(card)
-            # re-evaluate duplicates, as disabling or removing could
-            # change what is duplicated.
-            # Only do this if we have changed cards, though.  If we
-            # are in the middle of playing, e.g., Reckless Pilot,
-            # having player 1 discard RP does not mean that player 2's
-            # RP is no longer a duplicate.
-            if cardrank != lastcardrank and lastcardrank != -1:
-                # print("    end of turn comparing card ranks " +
-                #        str(cardrank) + " vs. " + str(lastcardrank))
-                newcardstoplay = self.getcardstoplay()
-                carddupes = self.checkfordupes(newcardstoplay)
-            lastcardrank = cardrank
 
     def endturn(self):
         cardstoplay = self.getcardstoplay()
