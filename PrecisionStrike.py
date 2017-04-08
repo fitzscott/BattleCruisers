@@ -45,3 +45,30 @@ class PrecisionStrike(C.Card):
 
     def clash_effect(self, game, pbidx):
         game.playerboards[pbidx].discard(self, ["inplay"])
+
+if __name__ == '__main__':
+    import Game
+    import RandomComputerPlayer as RCP
+
+    g = Game.Game(3)
+    for rcpi in range(3):
+        rcp = RCP.RandomComputerPlayer("Random Player " + str(rcpi+1))
+        g.playerboards[rcpi].player = rcp
+
+    ps = PrecisionStrike()
+    for i in range(3):
+        c = C.Card("No-op card " + str(i), 50+i)
+        g.addtocardlist(c)
+    g.addtocardlist(ps)
+    g.sendcardlisttoboards()
+
+    for pbi in range(2):
+        g.playerboards[pbi].readytoplay(ps)
+    g.playerboards[2].readytoplay(c)
+    print("    hand size = " + str(g.playerboards[0].hand))
+    print("Before playing " + ps.title + ":")
+    print(g.playerboards[0])
+    g.playallcards()
+    print("Two copies of " + ps.title + " should be in discards:")
+    for pbi in range(3):
+        print(g.playerboards[pbi])

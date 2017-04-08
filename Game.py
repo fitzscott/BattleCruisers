@@ -141,7 +141,9 @@ class Game(object):
             # are in the middle of playing, e.g., Reckless Pilot,
             # having player 1 discard RP does not mean that player 2's
             # RP is no longer a duplicate.
-            if cardrank != lastcardrank:
+            if cardrank != lastcardrank and lastcardrank != -1:
+                # print("    end of turn comparing card ranks " +
+                #        str(cardrank) + " vs. " + str(lastcardrank))
                 newcardstoplay = self.getcardstoplay()
                 carddupes = self.checkfordupes(newcardstoplay)
             lastcardrank = cardrank
