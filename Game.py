@@ -120,7 +120,8 @@ class Game(object):
                         plnm = currboard.player.name
                     else:
                         plnm = "Nohbody"
-                    print(plnm + " playing " + card.title)
+                    print(plnm + " playing " + str(card.rank) + " : " +
+                          card.title)
                     # re-evaluate duplicates, as disabling or removing could
                     # change what is duplicated.
                     # Only do this if we have changed cards, though.  If we
