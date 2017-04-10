@@ -33,19 +33,17 @@ def playcardlist(cards):
 
 
 #   main   #
-# expected parameters: combo file, # cards, # splits, which split to test
-if len(sys.argv) < 4:
+# expected parameters: combo file, # cards [iterations]
+if len(sys.argv) < 3:
     print("Usage: " + sys.argv[0] +
-          " combo_file #_splits split_to_run [iterations]")
+          " combo_file num_cards [iterations]")
     sys.exit(-1)
 
 combo_file_name = sys.argv[1]
 num_cards = int(sys.argv[2])
 num_players = num_cards - 3
-num_splits = int(sys.argv[3])
-split_to_run = int(sys.argv[4])
-if len(sys.argv) > 5:
-    num_iters = int(sys.argv[5])
+if len(sys.argv) > 3:
+    num_iters = int(sys.argv[3])
 else:
     num_iters = 100
 
@@ -55,42 +53,23 @@ li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
 
-# We will likely get fractional splits, so allow some overlap.
-splitsize = int(combos / num_splits + num_splits / 2)
-startsplit = int((split_to_run - 1) * float(combos / num_splits))
-sys.stderr.write("Starting at combination " + str(startsplit) + "\n")
-sys.stderr.write("    Running for " + str(splitsize) + " entries (till " +
-                 str(startsplit + splitsize) + ").\n")
-# print("Halfway is " + str(int(combos / 2)))
-if startsplit + splitsize > combos:
-    startsplit = combos - splitsize
-    sys.stderr.write("Revised starting at combination " +
-                     str(startsplit) + "\n")
-    sys.stderr.write("    Running for " + str(splitsize) + " entries (till " +
-                     str(startsplit + splitsize) + ").\n")
-
 combo_file = open(combo_file_name, "r")
-arrarr = []
+# arrarr = []
 recnum = 1
 for line in combo_file:
-    if recnum >= startsplit and recnum < startsplit + splitsize:
-        cardidxs = line.strip().split()
-	idxs = [ int(n) for n in cardidxs ]
-        arrarr.append(idxs)
+    cardidxs = line.strip().split()
+    idxs = [ int(n) for n in cardidxs ]
+    for j in range(num_iters):
+        playcardlist(idxs)
+    if recnum % 100 == 0:
+        sys.stderr.write("Completed " + str(recnum) + "\n")
+    # arrarr.append(idxs)
     recnum += 1
 combo_file.close()
 
-sys.stderr.write("Length of combo arr: " + str(len(arrarr)) + "\n")
+sys.stderr.write("Total records processed: " + str(recnum - 1) + "\n")
 li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
 sys.stderr.write("Number of combos: " + str(combos) + "\n")
 
-
-for compl, arr in enumerate(arrarr):
-    for j in range(num_iters):
-        playcardlist(arr)
-    if compl % 100 == 0:
-        sys.stderr.write("Completed " + str(compl) + "\n")
-
-sys.stderr.write("Completed split.\n\n")
