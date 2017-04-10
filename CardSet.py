@@ -141,6 +141,15 @@ class CardSet(object):
             loccardset.append(card)
         return(loccardset)
 
+    def getcardsetbyindices(self, indexlist):
+        loccardset = []
+        for idx in indexlist:
+            # call the constructor for each card in the set
+            rank = CardSet.cards.keys()[idx]
+            card = (CardSet.cards[rank])()
+            loccardset.append(card)
+        return(loccardset)
+
 if __name__ == '__main__':
     cs = CardSet(3)
     print("CardSet")
@@ -152,5 +161,9 @@ if __name__ == '__main__':
         print(card.title + " " + str(card.rank))
     print("    Set from list:")
     cards = cs.getcardsetbylist([3, 11, 13, 43, 39, 38])
+    for card in cards:
+        print(card.title + " " + str(card.rank))
+    cards = cs.getcardsetbyindices([14, 15, 16, 17, 18, 19])
+    print("    Set by indices (start w/ rank 20):")
     for card in cards:
         print(card.title + " " + str(card.rank))
