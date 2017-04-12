@@ -36,7 +36,7 @@ def playcardlist(cards):
 # expected parameters: combo file, # cards, # splits, which split to test
 if len(sys.argv) < 4:
     print("Usage: " + sys.argv[0] +
-          " combo_file #_splits split_to_run [iterations]")
+          " combo_file #_cards #_splits split_to_run [iterations]")
     sys.exit(-1)
 
 combo_file_name = sys.argv[1]
@@ -70,27 +70,23 @@ if startsplit + splitsize > combos:
                      str(startsplit + splitsize) + ").\n")
 
 combo_file = open(combo_file_name, "r")
-arrarr = []
+
+# arrarr = []
 recnum = 1
 for line in combo_file:
-    if recnum >= startsplit and recnum < startsplit + splitsize:
-        cardidxs = line.strip().split()
-	idxs = [ int(n) for n in cardidxs ]
-        arrarr.append(idxs)
+    cardidxs = line.strip().split()
+    idxs = [ int(n) for n in cardidxs ]
+    for j in range(num_iters):
+        playcardlist(idxs)
+    if recnum % 100 == 0:
+        sys.stderr.write("Completed " + str(recnum) + "\n")
+    # arrarr.append(idxs)
     recnum += 1
 combo_file.close()
-
 sys.stderr.write("Length of combo arr: " + str(len(arrarr)) + "\n")
 li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
 sys.stderr.write("Number of combos: " + str(combos) + "\n")
-
-
-for compl, arr in enumerate(arrarr):
-    for j in range(num_iters):
-        playcardlist(arr)
-    if compl % 100 == 0:
-        sys.stderr.write("Completed " + str(compl) + "\n")
 
 sys.stderr.write("Completed split.\n\n")
