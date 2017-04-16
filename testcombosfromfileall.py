@@ -8,7 +8,6 @@ import sys
 
 import CardSet as CS
 import SmarterGame as SG
-import SimpleHumanPlayer as SHP
 import RandomComputerPlayer as RCP
 
 
@@ -48,7 +47,7 @@ else:
     num_iters = 100
 
 num_possible_cards = len(CS.CardSet.cards)
-indexes = [ n for n in range(num_possible_cards) ]
+indexes = [n for n in range(num_possible_cards)]
 li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
@@ -58,7 +57,7 @@ combo_file = open(combo_file_name, "r")
 recnum = 1
 for line in combo_file:
     cardidxs = line.strip().split()
-    idxs = [ int(n) for n in cardidxs ]
+    idxs = [int(n) for n in cardidxs]
     for j in range(num_iters):
         playcardlist(idxs)
     if recnum % 100 == 0:
@@ -72,4 +71,3 @@ li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
 sys.stderr.write("Number of combos: " + str(combos) + "\n")
-

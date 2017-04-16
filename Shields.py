@@ -51,7 +51,8 @@ if __name__ == '__main__':
     pb = g.playerboards[0]
     pb.addtohand(s)
     pb.readytoplay(s)
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     if pb.protected > 0:
         print("Player board is protected by " + s.title)
     g.endturn()

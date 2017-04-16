@@ -56,7 +56,8 @@ if __name__ == '__main__':
     c3 = Captain()
     g.playerboards[3].addtohand(c3)
     g.playerboards[3].readytoplay(c3)
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     print("Player board 0 has " + str(g.playerboards[0].victorypoints) +
           " victory points (should still be 6)")
     # Finally, make them all Captains
@@ -67,15 +68,21 @@ if __name__ == '__main__':
     print("Player board 0 has " + str(g.playerboards[0].victorypoints) +
           " victory points (should be 5)")
     # Decrease VP to zero
-    g.playallcards()
-    g.playallcards()
-    g.playallcards()
-    g.playallcards()
-    g.playallcards()
+#    g.playallcards()
+#    g.playallcards()
+#    g.playallcards()
+#    g.playallcards()
+#    g.playallcards()
+    g.playcards()
+    g.playcards()
+    g.playcards()
+    g.playcards()
+    g.playcards()
     print("Player board 0 has " + str(g.playerboards[0].victorypoints) +
           " victory points (should be 0)")
     # and make sure VP can't go below zero
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     print("Player board 0 has " + str(g.playerboards[0].victorypoints) +
           " victory points (should still be 0)")
     print("Number of clashes in game = " + str(g.numclashes) + " (s/b 4)")

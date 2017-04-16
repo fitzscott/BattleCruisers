@@ -71,6 +71,7 @@ if __name__ == '__main__':
     # put Space card in RZ for test board
     pb.recoveryzone.append(c)
     pb.victorypoints = 0
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     # effectively running a.main_effect(g, 0)
     print("VP should be 4: " + str(pb.victorypoints))

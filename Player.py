@@ -105,3 +105,6 @@ class Player(object):
 
     def chooseeffecttoignore(self, game, myphbidx, card):
         pass
+
+    def chooserankingforcards(self, game, myphbidx):
+        pass

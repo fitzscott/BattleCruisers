@@ -21,6 +21,8 @@ class Bureaucrat(C.Card):
 
     def main_effect(self, game, pbidx):
         pb = game.playerboards[pbidx]
+        # Not clear if cards that prevent main effects from causing discards
+        # would also cause this card's main effect not to discard itself.
         pb.discard(self, ["inplay"])
         picked = pb.player.choosecardbyname(game, pbidx)
         for pboi in range(len(game.playerboards)):
@@ -55,7 +57,8 @@ if __name__ == '__main__':
     g.sendcardlisttoboards()
     g.playerboards[0].readytoplay(b)
     print("When prompted, choose one of the cards.")
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     print("Should show Bureaucrat in discards, plus")
     print("    the chosen card thrice in hand.")
     print(g.playerboards[0])

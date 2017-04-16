@@ -77,7 +77,8 @@ if __name__ == '__main__':
 
     print("Before playing " + cd.title + " vs. " + ha.title)
     print(pb0)
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     print("After " + cd.title + " vs. " + ha.title)
     print("    (should still have 1 VP)")
     print(pb0)

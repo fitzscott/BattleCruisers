@@ -50,7 +50,7 @@ else:
     num_iters = 100
 
 num_possible_cards = len(CS.CardSet.cards)
-indexes = [ n for n in range(num_possible_cards) ]
+indexes = [n for n in range(num_possible_cards)]
 li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
@@ -72,18 +72,20 @@ if startsplit + splitsize > combos:
 combo_file = open(combo_file_name, "r")
 
 # arrarr = []
-recnum = 1
+recnum = 0
 for line in combo_file:
     cardidxs = line.strip().split()
-    idxs = [ int(n) for n in cardidxs ]
-    for j in range(num_iters):
-        playcardlist(idxs)
-    if recnum % 100 == 0:
-        sys.stderr.write("Completed " + str(recnum) + "\n")
-    # arrarr.append(idxs)
     recnum += 1
+    if recnum >= startsplit and recnum < startsplit + splitsize:
+        idxs = [int(n) for n in cardidxs]
+        for j in range(num_iters):
+            playcardlist(idxs)
+        if recnum % 100 == 0:
+            sys.stderr.write("Completed " + str(recnum) + "\n")
+    elif recnum >= startsplit + splitsize:
+        break
 combo_file.close()
-sys.stderr.write("Length of combo arr: " + str(len(arrarr)) + "\n")
+sys.stderr.write("Length of combos: " + str(recnum) + "\n")
 li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))

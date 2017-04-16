@@ -60,7 +60,8 @@ if __name__ == '__main__':
 
     print("Before playing " + tw.title + ":")
     print(pb)
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     # effectively running a.main_effect(g, 0)
     print("3 discards should be back in hand:")
     print(pb)

@@ -67,6 +67,14 @@ class Game(object):
             for cardidx in range(len(self._cardlist)):
                 self.playerboards[pbidx].addtohand(self.cardlist[cardidx])
 
+    def revisedcardranking(self):
+        rvsd = False
+        for card in self.cardlist:
+            if card.effectiverank is not None:
+                rvsd = True
+                break
+        return(rvsd)
+
     def getcardstoplay(self):
         cardstoplay = []
         for pbidx in range(self._numplayers):
@@ -76,8 +84,34 @@ class Game(object):
                 continue
             if len(pb.inplay) > 0:
                 cardstoplay.append((pb.inplay[0].rank, pbidx))
+                # print("gctp: player " + str(pbidx) + " has a card to play.")
         cardstoplay.sort()
         return(cardstoplay)
+
+    def cardslefttoplay(self, lastrank=0):
+        # print("last rank is " + str(lastrank))
+        cardstoplay = self.getcardstoplay()
+        # print("ctp: " + str(cardstoplay))
+        if lastrank == 0:
+            stidx = 0
+            # print("stidx is 0")
+        else:
+            stidx = None
+            for cidx in range(len(cardstoplay)-1):
+                (rank, pbidx) = cardstoplay[cidx]
+                if rank == lastrank:
+                    stidx = cidx + 1
+                    # We are not going to break here, because the same card
+                    # can appear more than once.  We want next card after the
+                    # last instance of the same card.
+            # Make sure we aren't past the end of the playable cards
+            if stidx is not None and stidx < len(cardstoplay) and \
+                    cardstoplay[stidx][0] == lastrank:
+                stidx = None
+        if stidx is not None:
+            return(cardstoplay[stidx:])
+        else:
+            return(None)
 
     def checkfordupes(self, cardstoplay):
         carddupes = {}
@@ -96,24 +130,29 @@ class Game(object):
         print("Card dupes: " + str(carddupes))
         return(carddupes)
 
-    def playallcards(self):
+    def playcards(self):
         """
-        Create a tuple for each playerboard's card in play,
-        put them all in a list, and sort them.
-        Then determine whether there are duplicates & evaluate
-        each card.
+        Revised version of playallcards, taking into account ranking changes
+        that can occur for a particular card.
         """
-
-        cardstoplay = self.getcardstoplay()
-        # print(cardstoplay)
-        # Determine duplicates, if any, in chosen cards
-        carddupes = self.checkfordupes(cardstoplay)
-        lastcardrank = -1
-        for (cardrank, pbidx) in cardstoplay:
-            # It's possible that a card in play at the beginning of a
-            # turn will have been discarded before it gets played.
-            currboard = self.playerboards[pbidx]
-            if len(currboard.inplay) > 0:
+        cardstoplay = self.cardslefttoplay()
+        while cardstoplay is not None:
+            carddupes = self.checkfordupes(cardstoplay)
+            # produce a list of remaining card ranks
+            rankset = set([])
+            for (cardrank, pbidx) in cardstoplay:
+                rankset.add(cardrank)
+            # print("rankset is " + str(rankset))
+            ranks = list(rankset)
+            ranks.sort()
+            # print("ranks is " + str(ranks))
+            for (cardrank, pbidx) in cardstoplay:
+                # print("Rank " + str(cardrank) + ", player " + str(pbidx))
+                # Only run the top-ranked card; later ranks will run in
+                # subsequent iterations & calls to cardsleftoplay.
+                if cardrank != ranks[0]:
+                    continue
+                currboard = self.playerboards[pbidx]
                 card = currboard.inplay[0]
                 if currboard.disabled != 2:    # 2 => disabled this round
                     if currboard.player is not None:
@@ -122,21 +161,9 @@ class Game(object):
                         plnm = "Nohbody"
                     print(plnm + " playing " + str(card.rank) + " : " +
                           card.title)
-                    # re-evaluate duplicates, as disabling or removing could
-                    # change what is duplicated.
-                    # Only do this if we have changed cards, though.  If we
-                    # are in the middle of playing, e.g., Reckless Pilot,
-                    # having player 1 discard RP does not mean that player 2's
-                    # RP is no longer a duplicate.
-                    if cardrank != lastcardrank and lastcardrank != -1:
-                        print("    end of turn comparing card ranks " +
-                              str(cardrank) + " vs. " + str(lastcardrank))
-                        newcardstoplay = self.getcardstoplay()
-                        carddupes = self.checkfordupes(newcardstoplay)
-                    lastcardrank = cardrank
                     # cards might have been pulled out of the duplicate list
-                    # in the checkfordupes at the end of the loop.  If one
-                    # is gone, do not play it.
+                    # in checkfordupes.  If one is gone, do not play it.
+                    # To do:  This might not ever occur any more - check.
                     if cardrank not in carddupes:
                         continue
                     self.cardbeingplayed = card
@@ -148,35 +175,77 @@ class Game(object):
                 elif not currboard.checkredalert():
                     currboard.recoveryzone.append(card)
                     currboard.inplay.remove(card)
-
-    def endturn(self):
-        cardstoplay = self.getcardstoplay()
-        for (cardrank, pbidx) in cardstoplay:
-            if self.playerboards[pbidx].disabled != 2:
-                self.playerboards[pbidx].inplay[0].end_of_turn_effect(self,
-                                                                      pbidx)
-        players_left = len(self.playerboards)
-        players_vp = []
-        for pbi in range(len(self.playerboards)):
-            pb = self.playerboards[pbi]
-            pb.endplay()
-            # endplay calls checkredalert, so don't need this
-            # pb.checkredalert()
-            if pb.checklost():
-                players_left -= 1
-            elif pb.victorypoints >= 15:
-                players_vp.append((pb.victorypoints, len(pb.hand),
-                                  pb.handresoltot(), pbi))
-
-        gameover = False
-        if len(players_vp) >= 1:
-            players_vp.sort(reverse=True)
-            print(players_vp)
-            if len(players_vp) == 1:
-                winner = self.playerboards[players_vp[0][3]]
+            if len(ranks) > 0:
+                cardstoplay = self.cardslefttoplay(ranks[0])
             else:
-                p1 = self.playerboards[players_vp[0][3]]
-                p2 = self.playerboards[players_vp[1][3]]
+                cardstoplay = None
+
+    def playallcards(self):
+        # backward compatibility (i.e, I am lazy)
+        self.playcards()
+
+#    def playallcards(self):
+#        """
+#        Create a tuple for each playerboard's card in play,
+#        put them all in a list, and sort them.
+#        Then determine whether there are duplicates & evaluate
+#        each card.
+#        """
+#
+#        cardstoplay = self.getcardstoplay()
+#        # print(cardstoplay)
+#        # Determine duplicates, if any, in chosen cards
+#        carddupes = self.checkfordupes(cardstoplay)
+#        lastcardrank = -1
+#        for (cardrank, pbidx) in cardstoplay:
+#            # It's possible that a card in play at the beginning of a
+#            # turn will have been discarded before it gets played.
+#            currboard = self.playerboards[pbidx]
+#            if len(currboard.inplay) > 0:
+#                card = currboard.inplay[0]
+#                if currboard.disabled != 2:    # 2 => disabled this round
+#                    if currboard.player is not None:
+#                        plnm = currboard.player.name
+#                    else:
+#                        plnm = "Nohbody"
+#                    print(plnm + " playing " + str(card.rank) + " : " +
+#                          card.title)
+#                    # re-evaluate duplicates, as disabling or removing could
+#                    # change what is duplicated.
+#                    # Only do this if we have changed cards, though.  If we
+#                    # are in the middle of playing, e.g., Reckless Pilot,
+#                    # having player 1 discard RP does not mean that player 2's
+#                    # RP is no longer a duplicate.
+#                    if cardrank != lastcardrank and lastcardrank != -1:
+#                        print("    end of turn comparing card ranks " +
+#                              str(cardrank) + " vs. " + str(lastcardrank))
+#                        newcardstoplay = self.getcardstoplay()
+#                        carddupes = self.checkfordupes(newcardstoplay)
+#                    lastcardrank = cardrank
+#                    # cards might have been pulled out of the duplicate list
+#                    # in checkfordupes.  If one is gone, do not play it.
+#                    if cardrank not in carddupes:
+#                        continue
+#                    self.cardbeingplayed = card
+#                    if carddupes[cardrank] == "single":
+#                        card.main_effect(self, pbidx)
+#                    else:
+#                        card.clash_effect(self, pbidx)
+#                # If board is disabled, move its in-play card to the RZ
+#                elif not currboard.checkredalert():
+#                    currboard.recoveryzone.append(card)
+#                    currboard.inplay.remove(card)
+
+    def checkgameover(self, players_win_vp, players_left):
+        gameover = False
+        if len(players_win_vp) >= 1:
+            players_win_vp.sort(reverse=True)
+            print(players_win_vp)
+            if len(players_win_vp) == 1:
+                winner = self.playerboards[players_win_vp[0][3]]
+            else:
+                p1 = self.playerboards[players_win_vp[0][3]]
+                p2 = self.playerboards[players_win_vp[1][3]]
                 if p1.victorypoints > p2.victorypoints or \
                     len(p1.hand) > len(p2.hand) or \
                         p1.handresoltot() > p2.handresoltot():
@@ -188,7 +257,6 @@ class Game(object):
                       " is the victorious winner!")
             else:
                 print("We have a tie...  play again.")
-
             gameover = True
         elif players_left == 1:
             # print("We have a surviving winner!")
@@ -201,6 +269,31 @@ class Game(object):
             print("All players have failed to survive.")
             gameover = True
         return(gameover)
+
+    def endturn(self):
+        cardstoplay = self.getcardstoplay()
+        for (cardrank, pbidx) in cardstoplay:
+            if self.playerboards[pbidx].disabled != 2:
+                self.playerboards[pbidx].inplay[0].end_of_turn_effect(self,
+                                                                      pbidx)
+        # In case a card changed the cards' ranking, reset it
+        for card in self.cardlist:
+            card.effectiverank = None
+        players_left = len(self.playerboards)
+        players_win_vp = []
+        for pbi in range(len(self.playerboards)):
+            pb = self.playerboards[pbi]
+            pb.endplay()
+            # endplay calls checkredalert, so don't need this
+            # pb.checkredalert()
+            if pb.checklost():
+                players_left -= 1
+            elif pb.victorypoints >= 15:
+                players_win_vp.append((pb.victorypoints, len(pb.hand),
+                                      pb.handresoltot(), pbi))
+        gameover = self.checkgameover(players_win_vp, players_left)
+        return(gameover)
+
 
 if __name__ == '__main__':
     c1 = Card.Card("Not a Card", 1)

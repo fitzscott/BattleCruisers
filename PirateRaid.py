@@ -23,6 +23,8 @@ class PirateRaid(C.Card):
 
     def main_effect(self, game, pbidx):
         mypb = game.playerboards[pbidx]
+        # Not clear if cards that prevent main effects from causing discards
+        # would also cause this card's main effect not to discard itself.
         mypb.discard(self, ["inplay"])
         for pboi in range(len(game.playerboards)):
             if pboi != pbidx:
