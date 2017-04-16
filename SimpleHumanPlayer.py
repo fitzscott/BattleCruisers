@@ -5,6 +5,7 @@ Created on Thu Mar 16 20:14:25 2017
 @author: bushnelf
 """
 
+import sys
 import Player
 
 
@@ -214,6 +215,40 @@ class SimpleHumanPlayer(Player.Player):
             chosenfxidx = input("!!  Choose effect by number: ")
             fxrank = tgtranklist[chosenfxidx]
         return(fxrank)
+
+    def chooserankingforcards(self, game, myphbidx):
+        # scramble the rankings of cards after my card
+        realrankpb = game.getcardstoplay()
+        rankset = set([])        # just want the unique ranks
+        for (rank, pb) in realrankpb:
+            if (pb != myphbidx):
+                rankset.add(rank)
+        effranks = list(rankset)
+        print("rankset = " + str(rankset) + ", eff = " + str(effranks))
+        rcnt = len(effranks)
+        print("rcnt = " + str(rcnt))
+        # get the full card list, so we'll have descriptions for cards
+        optnum = 0
+        optranks = []
+        neworder = None
+        for card in game.cardlist:
+            if card.rank in effranks:
+                print("    " + str(optnum) + ") " + str(card))
+                optranks.append(card.rank)
+                optnum += 1
+        if optnum > 0:
+            print("!!  Choose new ordering by option number: ")
+            chosenorder = sys.stdin.readline().strip().split()
+            neworder = [int(co) for co in chosenorder]
+        # now produce a mapping from real rank to effective rank
+        realeffmap = {}
+        if neworder is not None:
+            idx = 0
+            for newidx in neworder:
+                realeffmap[effranks[newidx]] = effranks[idx]
+                idx += 1
+            print("Real: effective rank map: " + str(realeffmap))
+        return(realeffmap)
 
 if __name__ == '__main__':
     import Game

@@ -59,9 +59,7 @@ if __name__ == '__main__':
     g.playerboards[0].readytoplay(ep)
     print("Before playing " + ep.title + ":")
     print(g.playerboards[0])
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     print("After playing " + ep.title + ":")
     print(g.playerboards[0])
-
-
-    

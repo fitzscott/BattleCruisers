@@ -29,6 +29,7 @@ class Card(object):
         self._title = title
         self._rank = rank
         self._symbols = []
+        self._effectiverank = None
 
     @property
     def title(self):
@@ -36,11 +37,22 @@ class Card(object):
 
     @property
     def rank(self):
-        return(self._rank)
+        if self._effectiverank is not None:
+            return(self._effectiverank)
+        else:
+            return(self._rank)
 
     @property
     def symbols(self):
         return(self._symbols)
+
+    @property
+    def effectiverank(self):
+        return(self._effectiverank)
+
+    @effectiverank.setter
+    def effectiverank(self, val):
+        self._effectiverank = val
 
     def add_symbol(self, sym):
         self._symbols.append(sym)

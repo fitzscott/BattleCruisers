@@ -63,6 +63,7 @@ if __name__ == '__main__':
     g.addtocardlist(c)
     g.sendcardlisttoboards()
     g.playerboards[0].readytoplay(sd)
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     # sd.main_effect(g, 0)
     # sd.end_of_turn_effect(g, 0)

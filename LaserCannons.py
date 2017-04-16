@@ -73,7 +73,8 @@ if __name__ == '__main__':
     print("++++++    All cards should be in hand:")
     print(g.playerboards[0])
     print(g.playerboards[1])
-    g.playallcards()
+    # g.playallcards()
+    g.playcards()
     print("++++++    1st card should be in discards:")
     print(g.playerboards[0])
     print(g.playerboards[1])
@@ -102,7 +103,8 @@ if __name__ == '__main__':
     for pb in g.playerboards:
         pb.readytoplay(lc)
         print(pb)
-    g.playallcards()    # should all be clashes
+    # g.playallcards()    # should all be clashes
+    g.playcards()
     print("####    1 card from hand or RZ -> discards   ####")
     for pb in g.playerboards:
         print(pb)

@@ -174,6 +174,33 @@ class RandomComputerPlayer(Player.Player):
             fxrank = tgtpblist[chosenplidx]
         return(fxrank)
 
+    def chooserankingforcards(self, game, myphbidx):
+        # just scramble the rankings of cards after my card
+        realrankpb = game.getcardstoplay()
+        rankset = set([])        # just want the unique ranks
+        for (rank, pb) in realrankpb:
+            if (pb != myphbidx):
+                rankset.add(rank)
+        effranks = list(rankset)
+        print("rankset = " + str(rankset) + ", eff = " + str(effranks))
+        rcnt = len(effranks)
+        print("rcnt = " + str(rcnt))
+        # now produce a mapping from real rank to effective rank
+        realeffmap = {}
+        if rcnt > 0:
+            for i in range(100):
+                idx1 = random.randint(0, rcnt-1)
+                idx2 = random.randint(0, rcnt-1)
+                tmp = effranks[idx1]
+                effranks[idx1] = effranks[idx2]
+                effranks[idx2] = tmp
+            efidx = 0
+            for rr in rankset:
+                realeffmap[rr] = effranks[efidx]
+                efidx += 1
+            print("Real: effective rank map: " + str(realeffmap))
+        return(realeffmap)
+
 if __name__ == '__main__':
     import Game
     import CardSet

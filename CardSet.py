@@ -38,6 +38,7 @@ import SpyDrone
 import SupplyConvoy
 import TacticalNuke
 import TargetingCPU
+import TechOfficer
 import TimeWarp
 
 
@@ -49,6 +50,7 @@ class CardSet(object):
 
     cards = {
         1:  SpyDrone.SpyDrone,
+        2:  TechOfficer.TechOfficer,
         3:  Shields.Shields,
         4:  CloakingDevice.CloakingDevice,
         5:  Navigator.Navigator,

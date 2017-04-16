@@ -48,4 +48,3 @@ class Decoy(C.Card):
 
 if __name__ == '__main__':
     d = Decoy()
-
