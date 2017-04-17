@@ -34,7 +34,10 @@ class Shields(Card.Card):
         """
         myboard = game.playerboards[pbidx]
         if myboard.checkredalert():
-            myboard.discard(self, ["inplay"])
+            # cards that prevent main effects from causing discards
+            # also cause this card's main effect not to discard itself.
+            if not myboard.defense(game, pbidx, ["card_discard"]):
+                myboard.discard(self, ["inplay"])
             print("Discarding last card " + self.title)
 
     def defense(self, game, pbidx, effect=["main_effect"], thisorlast="this"):

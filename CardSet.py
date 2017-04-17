@@ -29,6 +29,7 @@ import Negotiator
 import PirateRaid
 import PrecisionStrike
 import RecklessPilot
+import Reconstruction
 import RepairCrew
 import Salvage
 import SecurityChief
@@ -68,6 +69,7 @@ class CardSet(object):
         22: SpecialOps.SpecialOps,
         23: TargetingCPU.TargetingCPU,
         24: HeavyAssault.HeavyAssault,
+        28: Reconstruction.Reconstruction,
         29: AttackBots.AttackBots,
         30: ComputerVirus.ComputerVirus,
         31: LaserCannons.LaserCannons,
