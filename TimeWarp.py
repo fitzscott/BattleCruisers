@@ -30,7 +30,10 @@ class TimeWarp(C.Card):
         for card in cpdisc:
             pb.hand.append(card)
             pb.discards.remove(card)
-        pb.discard(self, ["inplay"])
+        # cards that prevent main effects from causing discards
+        # also cause this card's main effect not to discard itself.
+        if not pb.defense(game, pbidx, ["card_discard"]):
+            pb.discard(self, ["inplay"])
 
 if __name__ == '__main__':
     import Game

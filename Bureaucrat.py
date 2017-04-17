@@ -21,9 +21,10 @@ class Bureaucrat(C.Card):
 
     def main_effect(self, game, pbidx):
         pb = game.playerboards[pbidx]
-        # Not clear if cards that prevent main effects from causing discards
-        # would also cause this card's main effect not to discard itself.
-        pb.discard(self, ["inplay"])
+        # cards that prevent main effects from causing discards
+        # also cause this card's main effect not to discard itself.
+        if not pb.defense(game, pbidx, ["card_discard"]):
+            pb.discard(self, ["inplay"])
         picked = pb.player.choosecardbyname(game, pbidx)
         for pboi in range(len(game.playerboards)):
             if pboi != pbidx:

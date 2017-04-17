@@ -22,9 +22,12 @@ class RecklessPilot(Card.Card):
         Discard 1 card + get 4 VP
         """
         myboard = game.playerboards[pbidx]
-        card = myboard.player.choosecardtodiscard(game, pbidx,
-                                                  ["hand", "recovery"])
-        myboard.discard(card, ["hand", "recovery"])
+        # cards that prevent main effects from causing discards
+        # also cause this card's main effect not to discard itself.
+        if not myboard.defense(game, pbidx, ["card_discard"]):
+            card = myboard.player.choosecardtodiscard(game, pbidx,
+                                                      ["hand", "recovery"])
+            myboard.discard(card, ["hand", "recovery"])
         myboard.victorypoints += 4
 
     def clash_effect(self, game, pbidx):

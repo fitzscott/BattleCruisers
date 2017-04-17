@@ -60,9 +60,11 @@ class RandomComputerPlayer(Player.Player):
         print("..... " + self.name + " choosing card to give away")
         return(self.chooserandomcard(game, myphbidx, ["hand"]))
 
-    def choosecardtotrade(self, game, myphbidxdeck):
-        """ Which card needs this?  """
-        pass
+    def choosecardtotrade(self, game, myphbidx, deck):
+        """ Which card needs this? Reconstruction, but it's really just
+            like giving a card away. """
+        print("..... " + self.name + " choosing card to trade")
+        return(self.chooserandomcard(game, myphbidx, ["hand"]))
 
     def choosecardbyname(self, game, myphbidx):
         cidx = random.randint(0, len(game.cardlist)-1)

@@ -26,7 +26,10 @@ class TacticalNuke(C.Card):
         # per the rules & Board Game Geek, you can play this even if
         # you have no cards to discard.
         if mycard is not None:
-            mypb.discard(mycard, ["hand", "recovery"])
+            # cards that prevent main effects from causing discards
+            # also cause this card's main effect not to discard itself.
+            if not mypb.defense(game, pbidx, ["card_discard"]):
+                mypb.discard(mycard, ["hand", "recovery"])
         # Other players discard 2 cards each.  Boom.
         for opbidx in range(len(game.playerboards)):
             if opbidx != pbidx:

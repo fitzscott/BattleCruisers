@@ -45,8 +45,9 @@ class SimpleHumanPlayer(Player.Player):
                 print("    " + str(cidx) + ") " + pickfrom[cidx].title +
                       " (rank " + str(pickfrom[cidx].rank) + ")")
             # gather input here
-            chosenidx = input("!!  Choose a card by number:")
-            card = pickfrom[chosenidx]
+            chosenidx = input("!!  Choose a card by number (higher if none):")
+            if chosenidx < decksize:
+                card = pickfrom[chosenidx]
         return(card)
 
     def choosecardtoplay(self, game, myphbidx):
@@ -78,6 +79,10 @@ class SimpleHumanPlayer(Player.Player):
 
     def choosecardtogiveaway(self, game, myphbidx, deck):
         print("..... " + self.name + " choosing card to give away")
+        return(self.choosecard(game, myphbidx, deck))
+
+    def choosecardtotrade(self, game, myphbidx, deck):
+        print("..... " + self.name + " choosing card to trade")
         return(self.choosecard(game, myphbidx, deck))
 
     def choosecardtotake(self, game, myphbidx):
