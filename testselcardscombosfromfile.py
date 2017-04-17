@@ -33,24 +33,46 @@ def playcardlist(cards):
 
 
 #   main   #
-# expected parameters: combo file, # cards [iterations]
-if len(sys.argv) < 5:
+if len(sys.argv) < 7:
     print("Usage: " + sys.argv[0] +
-          " combo_file num_cards iterations cardrank1 [cardrank2 ...]")
+          " combo_file num_cards iterations splits split2run " +
+          "cardrank1 [cardrank2 ...]")
     sys.exit(-1)
 
 combo_file_name = sys.argv[1]
 num_cards = int(sys.argv[2])
 num_players = num_cards - 3
 num_iters = int(sys.argv[3])
-cardrank = [int(n) for n in sys.argv[4:]]
+num_splits = int(sys.argv[4])
+split_to_run = int(sys.argv[5])
+cardrank = [int(n) for n in sys.argv[6:]]
 sys.stderr.write("Want to match ranks: " + str(cardrank) + "\n")
 
 num_possible_cards = len(CS.CardSet.cards)
-indexes = [n for n in range(num_possible_cards)]
-li = len(indexes)
-combos = M.factorial(li) / (M.factorial(num_cards) *
-                            M.factorial(li - num_cards))
+# print("Total card count is " + str(num_possible_cards))
+# combos = (M.factorial(num_possible_cards) / (M.factorial(num_cards) *
+#           M.factorial(num_possible_cards - num_cards)))
+# sys.stderr.write("Number of combos: " + str(combos) + "\n")
+selcardcount = len(cardrank)
+numremaining = num_possible_cards - selcardcount
+remainingtochoose = num_cards - selcardcount
+combos = (M.factorial(numremaining) / (M.factorial(remainingtochoose) *
+          M.factorial(numremaining - remainingtochoose)))
+sys.stderr.write("Number of combos for selected: " + str(combos) + "\n")
+
+# We will likely get fractional splits, so allow some overlap.
+splitsize = int(combos / num_splits + num_splits / 2)
+startsplit = int((split_to_run - 1) * float(combos / num_splits))
+sys.stderr.write("Starting at combination " + str(startsplit) + "\n")
+sys.stderr.write("    Running for " + str(splitsize) + " entries (till " +
+                 str(startsplit + splitsize) + ").\n")
+# print("Halfway is " + str(int(combos / 2)))
+if startsplit + splitsize > combos:
+    startsplit = combos - splitsize
+    sys.stderr.write("Revised starting at combination " +
+                     str(startsplit) + "\n")
+    sys.stderr.write("    Running for " + str(splitsize) + " entries (till " +
+                     str(startsplit + splitsize) + ").\n")
 
 cs = CS.CardSet(num_players)
 clidxs = [n for n in cs.cards.keys()]
@@ -60,6 +82,7 @@ sys.stderr.write("   So match indices: " + str(cardlist) + "\n")
 combo_file = open(combo_file_name, "r")
 # arrarr = []
 recnum = 1
+found = 0
 played = 0
 for line in combo_file:
     cardidxs = line.strip().split()
@@ -70,6 +93,8 @@ for line in combo_file:
             allfound = False
             break
     if allfound:
+        found += 1
+        if found >= startsplit and found < startsplit + splitsize:
             sys.stderr.write("    Match: " + str(idxs) + "\n")
             for j in range(num_iters):
                 playcardlist(idxs)
@@ -79,9 +104,6 @@ for line in combo_file:
     recnum += 1
 combo_file.close()
 
-sys.stderr.write("Played " + str(played) + " card sets.\n")
-sys.stderr.write("Total records processed: " + str(recnum - 1) + "\n")
-li = len(indexes)
-combos = M.factorial(li) / (M.factorial(num_cards) *
-                            M.factorial(li - num_cards))
-sys.stderr.write("Number of combos: " + str(combos) + "\n")
+sys.stderr.write("Played " + str(played) + " of " + str(found) +
+                 " card sets.\n")
+sys.stderr.write("Total records checked: " + str(recnum - 1) + "\n")

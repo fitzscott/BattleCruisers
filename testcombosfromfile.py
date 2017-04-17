@@ -8,7 +8,7 @@ import sys
 
 import CardSet as CS
 import SmarterGame as SG
-import SimpleHumanPlayer as SHP
+# import SimpleHumanPlayer as SHP
 import RandomComputerPlayer as RCP
 
 

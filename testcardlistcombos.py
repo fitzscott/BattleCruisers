@@ -8,7 +8,7 @@ import sys
 
 import CardSet as CS
 import SmarterGame as SG
-import SimpleHumanPlayer as SHP
+# import SimpleHumanPlayer as SHP
 import RandomComputerPlayer as RCP
 
 
@@ -47,7 +47,7 @@ cardlist = [int(n) for n in sys.argv[4:]]
 sys.stderr.write("Want to match indices: " + str(cardlist) + "\n")
 
 num_possible_cards = len(CS.CardSet.cards)
-indexes = [ n for n in range(num_possible_cards) ]
+indexes = [n for n in range(num_possible_cards)]
 li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
@@ -58,7 +58,7 @@ recnum = 1
 played = 0
 for line in combo_file:
     cardidxs = line.strip().split()
-    idxs = [ int(n) for n in cardidxs ]
+    idxs = [int(n) for n in cardidxs]
     allfound = True
     for selc in cardlist:        # these are indices, not card ranks
         if selc not in idxs:
@@ -80,4 +80,3 @@ li = len(indexes)
 combos = M.factorial(li) / (M.factorial(num_cards) *
                             M.factorial(li - num_cards))
 sys.stderr.write("Number of combos: " + str(combos) + "\n")
-
