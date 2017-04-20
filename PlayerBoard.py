@@ -32,6 +32,7 @@ class PlayerBoard(object):
         self._player = None
         self._last_round_card = None
         self._vp_lost_this_round = 0
+        self._doubleplay = 0
 
     @property
     def inplay(self):
@@ -113,11 +114,21 @@ class PlayerBoard(object):
 
     @property
     def vp_lost_this_round(self):
-        return self._vp_lost_this_round
+        return(self._vp_lost_this_round)
 
     @vp_lost_this_round.setter
     def vp_lost_this_round(self, val):
         self._vp_lost_this_round = val
+
+    @property
+    def doubleplay(self):
+        return(self._doubleplay)
+
+    @doubleplay.setter
+    def doubleplay(self, val):
+        if val < 0:
+            val = 0
+        self._doubleplay = val
 
     def defense(self, game, pbidx, effect):
         """
@@ -187,6 +198,7 @@ class PlayerBoard(object):
         self.protected -= 1
         self.disabled -= 1
         self.vp_lost_this_round = 0
+        self._doubleplay -= 1
 
     def recover(self):
         """ Move the card(s) from the recovery zone to the

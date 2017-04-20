@@ -27,6 +27,7 @@ import LaserCannons
 import Navigator
 import Negotiator
 import PirateRaid
+import PodBayDoors
 import PrecisionStrike
 import RecklessPilot
 import Reconstruction
@@ -62,6 +63,7 @@ class CardSet(object):
         11: RecklessPilot.RecklessPilot,
         12: Negotiator.Negotiator,
         13: Captain.Captain,
+        15: PodBayDoors.PodBayDoors,
         16: RepairCrew.RepairCrew,
         17: Ambassador.Ambassador,
         19: CombatTactics.CombatTactics,

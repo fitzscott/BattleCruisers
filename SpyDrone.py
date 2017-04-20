@@ -25,6 +25,11 @@ class SpyDrone(Card.Card):
         Inform game to re-figure card ordering.
         """
         myboard = game.playerboards[pbidx]
+        # if the card has somehow left the inplay area, it cannot perform
+        # its swap.
+        if len(myboard.inplay) == 0:
+            print(self.title + " is no longer available.")
+            return
         card = myboard.player.choosecardtoswap(game, pbidx, ["hand"])
         if card is not None:
             print("----- before SpyDrone swap")

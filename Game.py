@@ -169,6 +169,13 @@ class Game(object):
                     self.cardbeingplayed = card
                     if carddupes[cardrank] == "single":
                         card.main_effect(self, pbidx)
+                        # if we are doubling a play, and the same card is still
+                        # in play, run it again.
+                        if len(currboard.inplay) > 0 and \
+                                currboard.inplay[0] == card and \
+                                currboard.doubleplay == 1:
+                            print("Double play on " + card.title)
+                            card.main_effect(self, pbidx)
                     else:
                         card.clash_effect(self, pbidx)
                 # If board is disabled, move its in-play card to the RZ
